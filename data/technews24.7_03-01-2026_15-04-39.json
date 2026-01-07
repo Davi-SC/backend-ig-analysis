@@ -1,0 +1,74 @@
+{
+  "username": "technews24.7",
+  "collected_at": "2026-01-03",
+  "profile": {
+    "name": "Notícias Tech 24/7",
+    "website": null,
+    "biography": "noticias tech",
+    "media_count": 2,
+    "follows_count": 25,
+    "followers_count": 3
+  },
+  "posts": [
+    {
+      "id": "18406296661186436",
+      "url": "https://www.instagram.com/p/DRKwmmPkfgS/",
+      "type": "Image",
+      "caption": "#### ATENÇÃO ####\nO CAFEZINHO PRETO NO COPO AMERICANO É OFICIALMENTE A BEBIDA DOS DEVS",
+      "isVideo": false,
+      "hashtags": [],
+      "insights": {
+        "likes": 4,
+        "reach": 2,
+        "saved": 0,
+        "views": null,
+        "shares": 0,
+        "comments": 2,
+        "total_interactions": 6
+      },
+      "mentions": [],
+      "shortCode": "DRKwmmPkfgS",
+      "timestamp": "2025-11-17T18:45:30+0000",
+      "likesCount": 4,
+      "commentsCount": 2,
+      "ownerUsername": "technews24.7"
+    },
+    {
+      "id": "18091336891776984",
+      "url": "https://www.instagram.com/p/DOrLSt4CVuf/",
+      "type": "Image",
+      "caption": "🚨 Alerta para devs!\nNos últimos dias, o npm foi alvo de ataques que comprometeram pacotes superpopulares, com bilhões de downloads. Hackers usaram phishing para roubar credenciais, publicar versões maliciosas e até roubar chaves, tokens e criptomoedas. Além disso, falhas no Node.js (CVE-2025-23166 e CVE-2025-23167) aumentaram os riscos. 🔒\n\n👉 Atualize sempre suas dependências, use autenticação forte e fique atento a pacotes suspeitos. Segurança começa no código!\n\n#npm #nodejs #cibersegurança #segurancadigital #devlife #programacao #infosec #desenvolvimento #openSource #segurancadainformacao #developer #cybersecurity",
+      "isVideo": false,
+      "hashtags": [
+        "npm",
+        "nodejs",
+        "cibersegurança",
+        "segurancadigital",
+        "devlife",
+        "programacao",
+        "infosec",
+        "desenvolvimento",
+        "openSource",
+        "segurancadainformacao",
+        "developer",
+        "cybersecurity"
+      ],
+      "insights": {
+        "likes": null,
+        "reach": null,
+        "saved": null,
+        "views": null,
+        "shares": null,
+        "comments": null,
+        "total_interactions": null
+      },
+      "mentions": [],
+      "shortCode": "DOrLSt4CVuf",
+      "timestamp": "2025-09-16T19:20:14+0000",
+      "likesCount": 3,
+      "commentsCount": 1,
+      "ownerUsername": "technews24.7"
+    }
+  ],
+  "total_posts": 2
+}

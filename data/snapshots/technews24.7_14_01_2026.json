@@ -1,0 +1,941 @@
+{
+  "username": "technews24.7",
+  "collected_at": "2026-01-14",
+  "profile": {
+    "name": "Notícias Tech 24/7",
+    "website": null,
+    "biography": "noticias tech",
+    "media_count": 11,
+    "follows_count": 46,
+    "followers_count": 87
+  },
+  "posts": [
+    {
+      "id": "19000000000000011",
+      "url": "https://www.instagram.com/p/DNEW01/",
+      "type": "Carousel",
+      "caption": "🚀 Nova plataforma promete revolucionar o mercado tech brasileiro",
+      "isVideo": false,
+      "comments": [
+        {
+          "id": "18000000000001100",
+          "text": "Isso é ouro! 💎",
+          "username": "curioso_tech",
+          "timestamp": "2026-01-08T14:27:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000001101",
+          "text": "Mandaram bem nessa 🔥",
+          "username": "curioso_tech",
+          "timestamp": "2026-01-08T23:07:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000001102",
+          "text": "Sensacional!",
+          "username": "recrutadortech",
+          "timestamp": "2026-01-08T14:29:00+0000",
+          "like_count": 4
+        },
+        {
+          "id": "18000000000001103",
+          "text": "Conteúdo de qualidade! 👏",
+          "username": "dev_junior",
+          "timestamp": "2026-01-08T22:30:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000001104",
+          "text": "Parabéns pelo conteúdo",
+          "username": "pipiraogames",
+          "timestamp": "2026-01-08T18:01:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000100500",
+          "text": "Adorei o post!",
+          "username": "analistafinanceiro",
+          "timestamp": "2026-01-08T12:51:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000700600",
+          "text": "Perfeito! 👌",
+          "username": "seguidor_fiel",
+          "timestamp": "2026-01-14T08:16:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000700701",
+          "text": "Perfeito! 👌",
+          "username": "produtor_conteudo",
+          "timestamp": "2026-01-14T19:38:00+0000",
+          "like_count": 1
+        }
+      ],
+      "hashtags": [
+        "ia",
+        "inteligenciaartificial",
+        "automacao"
+      ],
+      "insights": {
+        "likes": 19,
+        "reach": 147,
+        "saved": 6,
+        "views": null,
+        "shares": 5,
+        "comments": 8,
+        "total_interactions": 38
+      },
+      "mentions": [],
+      "shortCode": "DNEW01",
+      "timestamp": "2026-01-08T12:00:00+0000",
+      "likesCount": 19,
+      "commentsCount": 8,
+      "ownerUsername": "technews24.7"
+    },
+    {
+      "id": "18406296661186436",
+      "url": "https://www.instagram.com/p/DRKwmmPkfgS/",
+      "type": "Image",
+      "caption": "O cafezinho preto continua sendo o combustível oficial dos devs ☕",
+      "isVideo": false,
+      "comments": [
+        {
+          "id": "18039208910517006",
+          "text": "Belo copo",
+          "username": "cortesfilosofiabr",
+          "timestamp": "2026-01-03T13:28:07+0000",
+          "like_count": 0
+        },
+        {
+          "id": "17953430036920764",
+          "text": "Cafezin papae",
+          "username": "pipiraogames",
+          "timestamp": "2026-01-03T13:27:48+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000100200",
+          "text": "Informação valiosa 🙌",
+          "username": "analistafinanceiro",
+          "timestamp": "2026-01-08T18:14:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000700300",
+          "text": "Compartilhando com a equipe!",
+          "username": "patriota_tech",
+          "timestamp": "2026-01-14T17:22:00+0000",
+          "like_count": 3
+        }
+      ],
+      "hashtags": [],
+      "insights": {
+        "likes": 4,
+        "reach": 2,
+        "saved": 3,
+        "views": null,
+        "shares": 1,
+        "comments": 4,
+        "total_interactions": 12
+      },
+      "mentions": [],
+      "shortCode": "DRKwmmPkfgS",
+      "timestamp": "2025-11-17T18:45:30+0000",
+      "likesCount": 4,
+      "commentsCount": 4,
+      "ownerUsername": "technews24.7"
+    },
+    {
+      "id": "19000000000000001",
+      "url": "https://www.instagram.com/p/DBUSINESS01/",
+      "type": "Image",
+      "caption": "📊 Startups brasileiras captam mais de R$ 5 bilhões em investimentos em 2025.",
+      "isVideo": false,
+      "comments": [
+        {
+          "id": "18000000000000001",
+          "text": "Isso é incrível! 🚀",
+          "username": "startupbrasil",
+          "timestamp": "2026-01-02T11:15:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000000002",
+          "text": "Muito bom para o ecossistema",
+          "username": "investidortech",
+          "timestamp": "2026-01-02T12:30:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000003",
+          "text": "Orgulho do Brasil 🇧🇷",
+          "username": "empreendedor_digital",
+          "timestamp": "2026-01-02T14:45:00+0000",
+          "like_count": 3
+        },
+        {
+          "id": "18000000000100300",
+          "text": "Perfeito! 👌",
+          "username": "analista_dados",
+          "timestamp": "2026-01-08T19:33:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000700400",
+          "text": "Bem explicado 📚",
+          "username": "programador_remoto",
+          "timestamp": "2026-01-14T13:45:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000700501",
+          "text": "Continue com esse trabalho!",
+          "username": "usuaria_digital",
+          "timestamp": "2026-01-14T14:37:00+0000",
+          "like_count": 0
+        }
+      ],
+      "hashtags": [
+        "startups",
+        "investimentos",
+        "negocios",
+        "economia"
+      ],
+      "insights": {
+        "likes": 23,
+        "reach": 158,
+        "saved": 9,
+        "views": null,
+        "shares": 5,
+        "comments": 6,
+        "total_interactions": 43
+      },
+      "mentions": [],
+      "shortCode": "DBUSINESS01",
+      "timestamp": "2026-01-02T10:12:00+0000",
+      "likesCount": 23,
+      "commentsCount": 6,
+      "ownerUsername": "technews24.7"
+    },
+    {
+      "id": "19000000000000002",
+      "url": "https://www.instagram.com/p/DBUSINESS02/",
+      "type": "Carousel",
+      "caption": "💼 Empresas de tecnologia lideram ranking de maiores contratações do ano.",
+      "isVideo": false,
+      "comments": [
+        {
+          "id": "18000000000000004",
+          "text": "Ótima notícia para quem está na área!",
+          "username": "dev_junior",
+          "timestamp": "2026-01-02T15:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000005",
+          "text": "Mercado aquecido 🔥",
+          "username": "recrutadortech",
+          "timestamp": "2026-01-02T16:20:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000000006",
+          "text": "Vagas remotas também?",
+          "username": "programador_remoto",
+          "timestamp": "2026-01-02T17:10:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000000007",
+          "text": "Sim, a maioria oferece trabalho remoto!",
+          "username": "technews24.7",
+          "timestamp": "2026-01-02T17:45:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000100400",
+          "text": "Bem explicado 📚",
+          "username": "analista_dados",
+          "timestamp": "2026-01-08T11:12:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000100501",
+          "text": "Isso é ouro! 💎",
+          "username": "gerente_inovacao",
+          "timestamp": "2026-01-08T22:41:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000700600",
+          "text": "Adorando esse perfil",
+          "username": "desenvolvedor_python",
+          "timestamp": "2026-01-14T09:24:00+0000",
+          "like_count": 2
+        }
+      ],
+      "hashtags": [
+        "mercadodetrabalho",
+        "tecnologia",
+        "empresas"
+      ],
+      "insights": {
+        "likes": 29,
+        "reach": 185,
+        "saved": 7,
+        "views": null,
+        "shares": 8,
+        "comments": 7,
+        "total_interactions": 51
+      },
+      "mentions": [],
+      "shortCode": "DBUSINESS02",
+      "timestamp": "2026-01-02T14:30:00+0000",
+      "likesCount": 29,
+      "commentsCount": 7,
+      "ownerUsername": "technews24.7"
+    },
+    {
+      "id": "19000000000000003",
+      "url": "https://www.instagram.com/p/DBUSINESS03/",
+      "type": "Video",
+      "caption": "📉 Especialistas analisam queda das ações após anúncio de novas taxas.",
+      "isVideo": true,
+      "comments": [
+        {
+          "id": "18000000000000008",
+          "text": "Análise muito completa!",
+          "username": "analistafinanceiro",
+          "timestamp": "2026-01-02T19:00:00+0000",
+          "like_count": 3
+        },
+        {
+          "id": "18000000000000009",
+          "text": "Momento de comprar na baixa",
+          "username": "investidor_pro",
+          "timestamp": "2026-01-02T19:30:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000000010",
+          "text": "Cuidado com as quedas, pessoal",
+          "username": "economista_digital",
+          "timestamp": "2026-01-02T20:15:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000011",
+          "text": "Vídeo esclarecedor 👏",
+          "username": "estudante_economia",
+          "timestamp": "2026-01-03T08:00:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000000012",
+          "text": "Sempre acompanho seus vídeos!",
+          "username": "trader_br",
+          "timestamp": "2026-01-03T10:30:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000013",
+          "text": "Quando terá mais conteúdo assim?",
+          "username": "aprendiz_mercado",
+          "timestamp": "2026-01-03T12:00:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000000014",
+          "text": "Toda semana! Fique ligado 📲",
+          "username": "technews24.7",
+          "timestamp": "2026-01-03T13:00:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000100700",
+          "text": "Adorei o post!",
+          "username": "cliente_nubank",
+          "timestamp": "2026-01-08T10:16:00+0000",
+          "like_count": 3
+        },
+        {
+          "id": "18000000000700800",
+          "text": "Compartilhando com a equipe!",
+          "username": "dev_junior",
+          "timestamp": "2026-01-14T19:22:00+0000",
+          "like_count": 3
+        }
+      ],
+      "hashtags": [
+        "bolsa",
+        "mercadofinanceiro",
+        "economia"
+      ],
+      "insights": {
+        "likes": 44,
+        "reach": 297,
+        "saved": 12,
+        "views": 1746,
+        "shares": 11,
+        "comments": 9,
+        "total_interactions": 76
+      },
+      "mentions": [],
+      "shortCode": "DBUSINESS03",
+      "timestamp": "2026-01-02T18:45:00+0000",
+      "likesCount": 44,
+      "commentsCount": 9,
+      "ownerUsername": "technews24.7"
+    },
+    {
+      "id": "19000000000000004",
+      "url": "https://www.instagram.com/p/DBUSINESS04/",
+      "type": "Image",
+      "caption": "🤖 IA já é adotada por mais de 60% das grandes empresas no Brasil.",
+      "isVideo": false,
+      "comments": [
+        {
+          "id": "18000000000000015",
+          "text": "O futuro já chegou!",
+          "username": "tech_enthusiast",
+          "timestamp": "2026-01-01T12:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000016",
+          "text": "IA vai dominar tudo",
+          "username": "futurista_tech",
+          "timestamp": "2026-01-01T14:30:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000000017",
+          "text": "Que estatística impressionante 📊",
+          "username": "data_scientist_br",
+          "timestamp": "2026-01-01T16:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000018",
+          "text": "Minha empresa também está usando IA",
+          "username": "gerente_ti",
+          "timestamp": "2026-01-02T09:00:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000000019",
+          "text": "ChatGPT virou ferramenta essencial",
+          "username": "dev_fullstack",
+          "timestamp": "2026-01-02T11:00:00+0000",
+          "like_count": 3
+        },
+        {
+          "id": "18000000000000020",
+          "text": "Conteúdo de qualidade sempre!",
+          "username": "seguidor_tech",
+          "timestamp": "2026-01-03T10:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000100600",
+          "text": "Sensacional!",
+          "username": "marketing_digital",
+          "timestamp": "2026-01-08T08:52:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000100701",
+          "text": "Adorei o post!",
+          "username": "ai_researcher",
+          "timestamp": "2026-01-08T21:30:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000700800",
+          "text": "Informação valiosa 🙌",
+          "username": "gerente_ti",
+          "timestamp": "2026-01-14T21:41:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000700901",
+          "text": "Sempre aprendo algo novo aqui",
+          "username": "consultor_negocios",
+          "timestamp": "2026-01-14T18:44:00+0000",
+          "like_count": 3
+        }
+      ],
+      "hashtags": [
+        "inteligenciaartificial",
+        "inovacao",
+        "negocios"
+      ],
+      "insights": {
+        "likes": 38,
+        "reach": 256,
+        "saved": 15,
+        "views": null,
+        "shares": 10,
+        "comments": 10,
+        "total_interactions": 73
+      },
+      "mentions": [],
+      "shortCode": "DBUSINESS04",
+      "timestamp": "2026-01-01T11:00:00+0000",
+      "likesCount": 38,
+      "commentsCount": 10,
+      "ownerUsername": "technews24.7"
+    },
+    {
+      "id": "19000000000000005",
+      "url": "https://www.instagram.com/p/DBUSINESS05/",
+      "type": "Carousel",
+      "caption": "📦 E-commerce cresce mesmo com cenário econômico desafiador.",
+      "isVideo": false,
+      "comments": [
+        {
+          "id": "18000000000000021",
+          "text": "Vendas online só crescem!",
+          "username": "lojista_online",
+          "timestamp": "2026-01-01T17:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000022",
+          "text": "Meu e-commerce dobrou em 2025",
+          "username": "empreendedor_digital",
+          "timestamp": "2026-01-02T08:00:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000100200",
+          "text": "Conteúdo de qualidade! 👏",
+          "username": "dev_fullstack",
+          "timestamp": "2026-01-08T22:54:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000700300",
+          "text": "Continue com esse trabalho!",
+          "username": "programador_remoto",
+          "timestamp": "2026-01-14T17:23:00+0000",
+          "like_count": 0
+        }
+      ],
+      "hashtags": [
+        "ecommerce",
+        "varejo",
+        "negociosdigitais"
+      ],
+      "insights": {
+        "likes": 24,
+        "reach": 172,
+        "saved": 7,
+        "views": null,
+        "shares": 2,
+        "comments": 4,
+        "total_interactions": 37
+      },
+      "mentions": [],
+      "shortCode": "DBUSINESS05",
+      "timestamp": "2026-01-01T16:20:00+0000",
+      "likesCount": 24,
+      "commentsCount": 4,
+      "ownerUsername": "technews24.7"
+    },
+    {
+      "id": "19000000000000006",
+      "url": "https://www.instagram.com/p/DBUSINESS06/",
+      "type": "Video",
+      "caption": "📈 Fintechs atraem novos investidores após resultados positivos.",
+      "isVideo": true,
+      "comments": [
+        {
+          "id": "18000000000000023",
+          "text": "Fintechs são o futuro do setor financeiro",
+          "username": "fintech_lover",
+          "timestamp": "2025-12-31T14:30:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000000024",
+          "text": "Investindo pesado nesse setor",
+          "username": "investidor_anjo",
+          "timestamp": "2025-12-31T16:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000025",
+          "text": "Nubank que o diga 💜",
+          "username": "cliente_nubank",
+          "timestamp": "2025-12-31T18:00:00+0000",
+          "like_count": 3
+        },
+        {
+          "id": "18000000000000026",
+          "text": "Adorei o vídeo explicativo!",
+          "username": "estudante_financas",
+          "timestamp": "2026-01-01T09:00:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000000027",
+          "text": "Revolução financeira em andamento",
+          "username": "analista_mercado",
+          "timestamp": "2026-01-01T11:30:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000028",
+          "text": "Qual fintech vocês recomendam?",
+          "username": "curioso_tech",
+          "timestamp": "2026-01-02T10:00:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000000029",
+          "text": "Várias opções boas! Pesquise bem antes",
+          "username": "technews24.7",
+          "timestamp": "2026-01-02T12:00:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000000030",
+          "text": "Excelente análise 👏👏👏",
+          "username": "economista_moderno",
+          "timestamp": "2026-01-03T09:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000100800",
+          "text": "Adorando esse perfil",
+          "username": "designer_grafico",
+          "timestamp": "2026-01-08T22:08:00+0000",
+          "like_count": 3
+        },
+        {
+          "id": "18000000000100901",
+          "text": "Parabéns pelo conteúdo",
+          "username": "recrutadortech",
+          "timestamp": "2026-01-08T20:12:00+0000",
+          "like_count": 3
+        },
+        {
+          "id": "18000000000701000",
+          "text": "Adorando esse perfil",
+          "username": "cortesfilosofiabr",
+          "timestamp": "2026-01-14T10:55:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000701101",
+          "text": "Adorei o post!",
+          "username": "analista_mercado",
+          "timestamp": "2026-01-14T21:28:00+0000",
+          "like_count": 3
+        }
+      ],
+      "hashtags": [
+        "fintech",
+        "investimentos",
+        "tecnologiafinanceira"
+      ],
+      "insights": {
+        "likes": 44,
+        "reach": 353,
+        "saved": 15,
+        "views": 2613,
+        "shares": 14,
+        "comments": 12,
+        "total_interactions": 85
+      },
+      "mentions": [],
+      "shortCode": "DBUSINESS06",
+      "timestamp": "2025-12-31T13:40:00+0000",
+      "likesCount": 44,
+      "commentsCount": 12,
+      "ownerUsername": "technews24.7"
+    },
+    {
+      "id": "19000000000000007",
+      "url": "https://www.instagram.com/p/DBUSINESS07/",
+      "type": "Image",
+      "caption": "🏦 Bancos digitais ampliam presença e alcançam novos públicos em 2026.",
+      "isVideo": false,
+      "comments": [
+        {
+          "id": "18000000000000031",
+          "text": "Já sou cliente de dois bancos digitais",
+          "username": "cliente_satisfeito",
+          "timestamp": "2026-01-03T10:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000032",
+          "text": "Praticidade é tudo!",
+          "username": "usuaria_digital",
+          "timestamp": "2026-01-03T11:30:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000000033",
+          "text": "Sem taxas abusivas 🙌",
+          "username": "economizador",
+          "timestamp": "2026-01-03T13:00:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000100300",
+          "text": "Compartilhando com a equipe!",
+          "username": "diretor_ti",
+          "timestamp": "2026-01-08T22:57:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000700400",
+          "text": "Adorando esse perfil",
+          "username": "cliente_satisfeito",
+          "timestamp": "2026-01-14T16:25:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000700501",
+          "text": "Informação valiosa 🙌",
+          "username": "consultor_negocios",
+          "timestamp": "2026-01-14T16:13:00+0000",
+          "like_count": 1
+        }
+      ],
+      "hashtags": [
+        "bancosdigitais",
+        "financas",
+        "negocios"
+      ],
+      "insights": {
+        "likes": 32,
+        "reach": 227,
+        "saved": 9,
+        "views": null,
+        "shares": 4,
+        "comments": 6,
+        "total_interactions": 51
+      },
+      "mentions": [],
+      "shortCode": "DBUSINESS07",
+      "timestamp": "2026-01-03T09:10:00+0000",
+      "likesCount": 32,
+      "commentsCount": 6,
+      "ownerUsername": "technews24.7"
+    },
+    {
+      "id": "19000000000000008",
+      "url": "https://www.instagram.com/p/DBUSINESS08/",
+      "type": "Carousel",
+      "caption": "📊 Infográfico mostra crescimento do setor de tecnologia no Brasil.",
+      "isVideo": false,
+      "comments": [
+        {
+          "id": "18000000000000034",
+          "text": "Dados muito interessantes!",
+          "username": "analista_dados",
+          "timestamp": "2026-01-03T12:30:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000035",
+          "text": "Brasil potência tech 🇧🇷",
+          "username": "patriota_tech",
+          "timestamp": "2026-01-03T13:15:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000000036",
+          "text": "Salvei para mostrar na apresentação",
+          "username": "professor_ti",
+          "timestamp": "2026-01-03T14:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000037",
+          "text": "Infográfico muito bem feito",
+          "username": "designer_grafico",
+          "timestamp": "2026-01-03T15:30:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000000038",
+          "text": "Compartilhando com minha equipe!",
+          "username": "lider_tech",
+          "timestamp": "2026-01-03T16:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000100500",
+          "text": "Muito interessante!",
+          "username": "dev_fullstack",
+          "timestamp": "2026-01-08T10:40:00+0000",
+          "like_count": 3
+        },
+        {
+          "id": "18000000000700600",
+          "text": "Muito interessante!",
+          "username": "data_scientist_br",
+          "timestamp": "2026-01-14T13:12:00+0000",
+          "like_count": 0
+        }
+      ],
+      "hashtags": [
+        "tecnologia",
+        "mercado",
+        "inovacao"
+      ],
+      "insights": {
+        "likes": 36,
+        "reach": 250,
+        "saved": 12,
+        "views": null,
+        "shares": 7,
+        "comments": 7,
+        "total_interactions": 62
+      },
+      "mentions": [],
+      "shortCode": "DBUSINESS08",
+      "timestamp": "2026-01-03T11:45:00+0000",
+      "likesCount": 36,
+      "commentsCount": 7,
+      "ownerUsername": "technews24.7"
+    },
+    {
+      "id": "19000000000000009",
+      "url": "https://www.instagram.com/p/DBUSINESS09/",
+      "type": "Video",
+      "caption": "🎥 CEOs comentam tendências de negócios e inovação para os próximos anos.",
+      "isVideo": true,
+      "comments": [
+        {
+          "id": "18000000000000039",
+          "text": "Entrevista sensacional!",
+          "username": "executivo_tech",
+          "timestamp": "2026-01-03T16:00:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000000040",
+          "text": "Insights valiosos dos CEOs",
+          "username": "empreendedor_startup",
+          "timestamp": "2026-01-03T16:30:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000041",
+          "text": "Vídeo inspirador 🚀",
+          "username": "aspirante_ceo",
+          "timestamp": "2026-01-03T17:00:00+0000",
+          "like_count": 3
+        },
+        {
+          "id": "18000000000000042",
+          "text": "Quando terá a parte 2?",
+          "username": "seguidor_fiel",
+          "timestamp": "2026-01-04T08:00:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000000043",
+          "text": "Adorei a parte sobre IA",
+          "username": "ai_researcher",
+          "timestamp": "2026-01-04T10:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000044",
+          "text": "Melhor conteúdo da semana",
+          "username": "business_student",
+          "timestamp": "2026-01-04T12:00:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000000045",
+          "text": "Compartilhei com todos os colegas",
+          "username": "gerente_inovacao",
+          "timestamp": "2026-01-05T09:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000046",
+          "text": "Aplicando essas ideias na empresa",
+          "username": "diretor_ti",
+          "timestamp": "2026-01-05T14:00:00+0000",
+          "like_count": 0
+        },
+        {
+          "id": "18000000000000047",
+          "text": "Conteúdo premium! 👏",
+          "username": "consultor_negocios",
+          "timestamp": "2026-01-06T10:00:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000000048",
+          "text": "Já assisti 3 vezes",
+          "username": "estudante_mba",
+          "timestamp": "2026-01-06T16:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000000049",
+          "text": "Obrigado pelo feedback, pessoal! 🙏",
+          "username": "technews24.7",
+          "timestamp": "2026-01-07T09:00:00+0000",
+          "like_count": 3
+        },
+        {
+          "id": "18000000000000050",
+          "text": "Mandaram muito bem nessa produção",
+          "username": "produtor_conteudo",
+          "timestamp": "2026-01-07T11:00:00+0000",
+          "like_count": 1
+        },
+        {
+          "id": "18000000000101200",
+          "text": "Continue com esse trabalho!",
+          "username": "product_manager",
+          "timestamp": "2026-01-08T21:54:00+0000",
+          "like_count": 2
+        },
+        {
+          "id": "18000000000701300",
+          "text": "Isso é ouro! 💎",
+          "username": "patriota_tech",
+          "timestamp": "2026-01-14T12:19:00+0000",
+          "like_count": 3
+        }
+      ],
+      "hashtags": [
+        "negocios",
+        "ceo",
+        "tendencias",
+        "inovacao"
+      ],
+      "insights": {
+        "likes": 58,
+        "reach": 479,
+        "saved": 21,
+        "views": 2990,
+        "shares": 22,
+        "comments": 14,
+        "total_interactions": 115
+      },
+      "mentions": [],
+      "shortCode": "DBUSINESS09",
+      "timestamp": "2026-01-03T15:30:00+0000",
+      "likesCount": 58,
+      "commentsCount": 14,
+      "ownerUsername": "technews24.7"
+    }
+  ],
+  "total_posts": 11
+}
