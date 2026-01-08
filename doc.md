@@ -35,6 +35,15 @@ Métodos:
   Se followers_count == 0, retorna 0.
   Se não, retorna a taxa de engajamento em porcentagem
 
+- **filtrar_posts_por_data**:
+  Filtra os posts por intervalo de data.
+  Args:
+  posts: lista de posts
+  data_inicio: data inicial no formato "YYYY-MM-DD"
+  data_fim: data final no formato "YYYY-MM-DD"
+  Retorna os posts filtrados
+  Lógica: extrair o timestamp do post(2025-11-17T18:45:30+0000), usar um split para separar o T, se o post estiver entre as datas de inicio e final adiciona a uma lista de posts filtrados.
+
 ## Schemas
 
 ### Snapshot_schemas.py
@@ -46,9 +55,7 @@ Nesse schema vou utilizar a biblioteca **Pydantic** para validação de dados em
   Classe para tipagem dos insights dos posts no json. Likes, reach, saved, shares, comments e total interactions são int, o views é Optional[int] pois somente posts do tipo video tem view
 - **Class PostData(BaseModel)**:
   Tipagem de todos os dados do json de posts.
-  Id, url, type,caption, shortCode, timestamp e ownerUsername são strings(str). isVideo é Boolean(bool). likesCount e commentsCount são int. Insights é do tipo PostInsights, comments é uma lista de Comment Data. E por fim, Hashtags e mentions são listas de str com Field(default_factory=list).
-
-  **Field(default_factory=list)** garante que cada campo seja uma lista vazia, ou seja, uma nova lista vazia para cada instancia.
+  Id, url, type,caption, shortCode, timestamp e ownerUsername são strings(str). isVideo é Boolean(bool). likesCount e commentsCount são int. Insights é do tipo PostInsights, comments é uma lista de Comment Data. E por fim, Hashtags e mentions são listas de str com Field(default_factory=list). **Field(default_factory=list)** garante que cada campo seja uma lista vazia, ou seja, uma nova lista vazia para cada instancia.
 
   **Metodos auxiliares**:
 
@@ -63,3 +70,4 @@ Nesse schema vou utilizar a biblioteca **Pydantic** para validação de dados em
   Classe para tipagem dos dados do perfil do usuário. name e biography são str, website é Optional[str], mediacount, follows_count e followers_count são int.
 
 - **Class SnapshotsData(BaseModel)**:
+  Classe para tipagem dos dados especificos do snapshot. username e collected_at são str, profile é ProfileData, posts é List[PostData] e total_posts é int.
