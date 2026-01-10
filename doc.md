@@ -71,3 +71,57 @@ Nesse schema vou utilizar a biblioteca **Pydantic** para validação de dados em
 
 - **Class SnapshotsData(BaseModel)**:
   Classe para tipagem dos dados especificos do snapshot. username e collected_at são str, profile é ProfileData, posts é List[PostData] e total_posts é int.
+
+## Webhook
+
+### domain/schemas/webhook_schemas.py
+
+Schemas Pydantic para validação de webhooks do IG. Baseado na documentação https://developers.facebook.com/docs/instagram-platform/webhooks
+
+- **class WebhookVerificationRequest(BaseModel)**: Modelo de requisição de verificação do webhook.
+- **class WebhookChange(BaseModel)**: Modelo para a mudança no webhook.
+- **class WebhookEntry(BaseModel)** : Modelo para entrada de evento do webhook
+- **class Webhookpayload(BaseModel)**: Modelo para o payload completo do webhook.
+
+### services/webhook_services.py
+
+Processamento e validação dos eventos recebidos. Implementa validação de assinatura SHA256 e processamento assíncrono de eventos.
+
+- **class WebhookService**: Service para gerenciar webhooks do IG
+
+  - **validate_signature**: Valida a assinatura SHA256 do payload, a meta envia um header X-Hub-Signature-256 com o formato sha256=<hash>. O metodo recebe o Payload bruto em bytes(_payload_) e a assinatura do header X-Hub-Signature-256(_signature_) e retorna true se a assinatura for válida.
+  - **process_webhook_event**: Metodo assincrono que processa os eventos de webhook
+  - **\_process_entry**:processa uma entrada individual do webhook de forma assincrona.
+  - **\_process_change**: processa mudança individual de forma assincrona. Recebe id da conta(account_id) e a mudança detectada(change).
+  - **\_handle_comment_event**: handle para eventos de comentários, recebe account_id e um value(dicionario com os dados do comentario) Exemplo de value:
+    {
+    "verb": "add", # ou "edited", "removed"
+    "object_id": "post-id",
+    "comment_id": "comment-id",
+    "text": "Nice photo!",
+    "from": {"id": "user-id", "username": "username"}
+    }
+  - **\_handle_mention_event**: handle para eventos de menções, recebe account_id e um value(dicionario com os dados da menção). Exemplo de value:
+    {
+    "verb": "add",
+    "media_id": "media-id",
+    "comment_id": "comment-id" # onde a menção ocorreu
+    }
+  - **\_handle_media_event**: handle para eventos de mídia, recebe account_id e um value(dicionario com os dados da mídia). Exemplo de value:
+    {
+    "verb": "update",
+    "media_id": "media-id"
+    }
+  - **\_handle_story_insights_event**: handle para eventos de insights de histórias, recebe account_id e um value(dicionario com os dados do insight). Exemplo de value:
+    {
+    "media_id": "media-id",
+    "impressions": 1234,
+    "reach": 567
+    }
+  - **store_webhook_payload**:armazena o payload do webhook em arquivo JSON. Recebe o payload completo e retorna o caminho salvo ou none se armazenar estiver desabilitado(store_payloads)
+
+### api/routes/webhooks.py
+
+Rotas de API para webhooks do IG. O arquivo implementa a verificação e recebimento de eventos da Meta API.
+
+### utils/webhook_logger.py

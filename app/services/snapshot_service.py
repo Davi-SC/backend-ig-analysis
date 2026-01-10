@@ -34,5 +34,7 @@ def filtrar_posts_por_data(
     for post in posts:
         #Extrair a data do timestamp(exemplo 2025-11-17T18:45:30+0000)
         post_date_str = post.timestamp.split('T')[0]
-        
+        if data_inicial <= post_date_str <= data_final:
+            posts_filtrados.append(post)
+
     return posts_filtrados    
