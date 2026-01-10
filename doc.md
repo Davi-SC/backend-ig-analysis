@@ -122,6 +122,8 @@ Processamento e validação dos eventos recebidos. Implementa validação de ass
 
 ### utils/webhook_logger.py
 
+Util de logging para webhooks do IG. Logging estrturado e rotação de logs.
+
 -
 
 ### api/routes/webhooks.py
