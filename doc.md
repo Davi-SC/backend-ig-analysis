@@ -120,8 +120,10 @@ Processamento e validação dos eventos recebidos. Implementa validação de ass
     }
   - **store_webhook_payload**:armazena o payload do webhook em arquivo JSON. Recebe o payload completo e retorna o caminho salvo ou none se armazenar estiver desabilitado(store_payloads)
 
+### utils/webhook_logger.py
+
+-
+
 ### api/routes/webhooks.py
 
 Rotas de API para webhooks do IG. O arquivo implementa a verificação e recebimento de eventos da Meta API.
-
-### utils/webhook_logger.py
