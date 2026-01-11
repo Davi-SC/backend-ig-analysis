@@ -47,11 +47,23 @@ class WebhookService:
             logger.error(f"Erro ao validar assinatura: {e}")
             return False
         
+    async def process_webhook_event(self, payload: WebhookPayload) -> None:
+        """
+        Processa um evento de webhook completo.
+        
+        Args:
+            payload: Payload do webhook validado
+        """
+        logger.info(f"Processando webhook - Objeto: {payload.object}")
+        
+        for entry in payload.entry:
+            await self._process_entry(entry)
+    
     async def _process_entry(self, entry: WebhookEntry) -> None:
         logger.info(f"Processando entrada para a conta ID: {entry.id}")
 
         for change in entry.changes:
-            await self._process_change(change)
+            await self._process_change(change, entry.id)
 
     async def _process_change(self, change: WebhookChange, account_id: str) -> None:
         field = change.field
