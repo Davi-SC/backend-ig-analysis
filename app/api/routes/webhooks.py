@@ -218,37 +218,37 @@ async def receive_webhook(request: Request) -> Dict[str, str]:
 # ==================== ENDPOINT DE TESTE (OPCIONAL) ====================
 # Útil para testar o endpoint localmente sem precisar da Meta
 
-@router.post("/instagram/test", summary="Testar endpoint de webhook (desenvolvimento)", include_in_schema=True)
-async def test_webhook(payload: Dict[str, Any]) -> Dict[str, str]:
-    """
-    Endpoint de teste para desenvolvimento.
-    Permite testar o processamento de webhooks sem validação de assinatura.
+# @router.post("/instagram/test", summary="Testar endpoint de webhook (desenvolvimento)", include_in_schema=False)
+# async def test_webhook(payload: Dict[str, Any]) -> Dict[str, str]:
+#     """
+#     Endpoint de teste para desenvolvimento.
+#     Permite testar o processamento de webhooks sem validação de assinatura.
     
-    Args:
-        payload: Payload de teste no formato do webhook
+#     Args:
+#         payload: Payload de teste no formato do webhook
         
-    Returns:
-        Status do processamento
-    """
-    try:
-        # Validar estrutura
-        webhook_payload = WebhookPayload(**payload)
+#     Returns:
+#         Status do processamento
+#     """
+#     try:
+#         # Validar estrutura
+#         webhook_payload = WebhookPayload(**payload)
         
-        # Obter serviço
-        service = get_webhook_service()
+#         # Obter serviço
+#         service = get_webhook_service()
         
-        # Armazenar payload de teste
-        if service.store_payloads:
-            await service.store_webhook_payload(payload)
+#         # Armazenar payload de teste
+#         if service.store_payloads:
+#             await service.store_webhook_payload(payload)
         
-        # Processar evento
-        await service.process_webhook_event(webhook_payload)
+#         # Processar evento
+#         await service.process_webhook_event(webhook_payload)
         
-        return {"status": "test_successful"}
+#         return {"status": "test_successful"}
         
-    except Exception as e:
-        logger.error(f"Erro no teste de webhook: {e}", exc_info=True)
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Erro ao processar payload de teste: {str(e)}"
-        )
+#     except Exception as e:
+#         logger.error(f"Erro no teste de webhook: {e}", exc_info=True)
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail=f"Erro ao processar payload de teste: {str(e)}"
+#         )

@@ -14,6 +14,8 @@
 # Local configuration that shouldn't be shared
 *.local
 # data
+data/logs
+data/webhooks
 
 ### Python ###
 # Python compiled files, virtual environments, and cache
