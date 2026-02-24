@@ -179,3 +179,5 @@ site/
 .vscode/sftp.json
 .vscode/tags
 .devcontainer/
+
+diagrams/
