@@ -30,11 +30,11 @@ def get_webhook_service() -> WebhookService:
     global webhook_service
     
     if webhook_service is None:
-        app_secret = os.getenv("META_APP_SECRET")
+        app_secret = os.getenv("IG_APP_SECRET")
         store_payloads = os.getenv("WEBHOOK_STORE_PAYLOADS", "true").lower() == "true"
         
         if not app_secret:
-            raise ValueError("META_APP_SECRET não configurado nas variáveis de ambiente")
+            raise ValueError("IG_APP_SECRET não configurado nas variáveis de ambiente")
         
         webhook_service = WebhookService(
             app_secret=app_secret,
