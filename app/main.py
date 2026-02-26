@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 
 from app.api.routes.webhooks import router as webhooks_router
+from app.api.routes.auth import router as auth_router
 
 # Carregar variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -15,3 +16,6 @@ app = FastAPI(
 
 # Registrar rotas de webhook
 app.include_router(webhooks_router)
+
+# Registrar rotas de autenticação OAuth
+app.include_router(auth_router)
