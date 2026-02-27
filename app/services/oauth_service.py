@@ -31,7 +31,7 @@ def generate_fb_oauth_url() -> str:
     params = {
         'client_id': FB_OAUTH_APP_ID,
         'display': 'page',
-        'extras': '{"setup":{"channel":"IG_API_ONBOARDING"}}',
+        # 'extras': '{"setup":{"channel":"IG_API_ONBOARDING"}}',
         'redirect_uri': OAUTH_REDIRECT_URI,
         'response_type': 'token',
         'scope': FB_OAUTH_SCOPES,
