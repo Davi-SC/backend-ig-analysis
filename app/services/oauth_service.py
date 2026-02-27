@@ -102,6 +102,7 @@ def oauth_short_to_long_lived_token(short_tk: str, is_instagram_only: bool = Fal
         base_url = f"https://graph.facebook.com/{GRAPH_API_VERSION}/oauth/access_token"
         params = {
             'grant_type': 'fb_exchange_token',
+            'client_id': FB_OAUTH_APP_ID,      
             'client_secret': FB_OAUTH_APP_SECRET,
             'access_token': short_tk
         }
