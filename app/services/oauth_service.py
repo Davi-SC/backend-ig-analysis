@@ -24,14 +24,20 @@ GRAPH_API_VERSION = 'v25.0'
 ### >> Generate OAuth URLs << ###
 
 def generate_fb_oauth_url() -> str:
+    """
+    Gera URL de login do Facebook Business (Instagram API with Facebook Login).
+    Documentação: https://developers.facebook.com/docs/instagram-platform/instagram-api-with-facebook-login/business-login-for-instagram
+    """
     params = {
         'client_id': FB_OAUTH_APP_ID,
+        'display': 'page',
+        'extras': '{"setup":{"channel":"IG_API_ONBOARDING"}}',
         'redirect_uri': OAUTH_REDIRECT_URI,
+        'response_type': 'token',
         'scope': FB_OAUTH_SCOPES,
-        'response_type': 'code',
-        'display': 'page'
     }
-    fb_oauth_url = f'https://www.facebook.com/{GRAPH_API_VERSION}/dialog/oauth?{urlencode(params)}'
+    # fb_oauth_url = f'https://www.facebook.com/{GRAPH_API_VERSION}/dialog/oauth?{urlencode(params)}'
+    fb_oauth_url = f'https://www.facebook.com/dialog/oauth?{urlencode(params)}'
     logging.info(f'URL de Autorização OAuth FB: {fb_oauth_url}')
     return fb_oauth_url
 
