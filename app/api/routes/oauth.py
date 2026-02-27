@@ -52,16 +52,21 @@ async def oauth_callback(
     """
     Recebe o `code` que o Instagram/Facebook envia ao redirect_uri após o login.
     Troca o code por um short-lived token e depois por um long-lived token (~60 dias).
+    Para o fluxo Instagram, retorna também o user_id.
     """
     try:
-        short_token = oauth_code_to_short_lived_token(code, is_instagram_only=is_instagram_only)
-        if not short_token:
+        # Passo 1: code → short-lived token (retorna dict com access_token e user_id)
+        short_data = oauth_code_to_short_lived_token(code, is_instagram_only=is_instagram_only)
+        if not short_data:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Falha ao trocar o code pelo token. O code pode ter expirado."
             )
 
-        long_token = oauth_short_to_long_lived_token(short_token, is_instagram_only=is_instagram_only)
+        user_id = short_data.get('user_id')  # Presente apenas no fluxo Instagram
+
+        # Passo 2: short-lived → long-lived token
+        long_token = oauth_short_to_long_lived_token(short_data['access_token'], is_instagram_only=is_instagram_only)
         if not long_token:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -69,13 +74,14 @@ async def oauth_callback(
             )
 
         logger.info("OAuth concluído com sucesso.")
-        return OAuthCallbackResponse(access_token=long_token)
+        return OAuthCallbackResponse(access_token=long_token, user_id=user_id)
 
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Erro no OAuth callback: {e}", exc_info=True)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Erro interno no OAuth callback")
+
 
 
 ### >> Validar OAuth token << ###

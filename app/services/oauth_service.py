@@ -50,7 +50,10 @@ def generate_ig_oauth_url() -> str:
 
 ### >> Exchange code for short lived token << ###
 
-def oauth_code_to_short_lived_token(code: str, is_instagram_only: bool = False) -> str | None:
+def oauth_code_to_short_lived_token(code: str, is_instagram_only: bool = False) -> dict | None:
+    """
+    Retorna dict com 'access_token' e opcionalmente 'user_id' (apenas no fluxo Instagram).
+    """
     if is_instagram_only:
         base_url = 'https://api.instagram.com/oauth/access_token'
         params = {
@@ -74,7 +77,11 @@ def oauth_code_to_short_lived_token(code: str, is_instagram_only: bool = False) 
     if response.status_code == 200:
         data = response.json()
         logging.info('OAuth Short-Lived Token obtido com sucesso.')
-        return data['access_token']
+        result = {'access_token': data['access_token']}
+        # O Instagram retorna user_id junto com o short-lived token
+        if is_instagram_only and 'user_id' in data:
+            result['user_id'] = str(data['user_id'])
+        return result
 
     logging.error(f'Erro ao obter OAuth Short-Lived Token: {response.text}')
     return None

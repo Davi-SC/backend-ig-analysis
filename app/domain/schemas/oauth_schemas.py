@@ -13,6 +13,7 @@ class OAuthUrlResponse(BaseModel):
 class OAuthCallbackResponse(BaseModel):
     """Resposta da rota /oauth/callback — retorna o token de acesso de longa duração."""
     access_token: str
+    user_id: Optional[str] = None  # Presente no fluxo Instagram (retornado pela API)
 
 
 class OAuthTokenValidationResponse(BaseModel):
