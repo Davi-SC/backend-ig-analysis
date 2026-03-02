@@ -22,3 +22,15 @@ class OAuthTokenValidationResponse(BaseModel):
     expires_at: int
     scopes: List[str]
     user_id: Optional[str] = None
+
+
+class FbSaveRequest(BaseModel):
+    """Body da rota POST /oauth/fb/save — token recebido pelo frontend via implicit flow do Facebook."""
+    access_token: str = Field(..., description="Token de acesso retornado pelo Facebook ao frontend")
+    user_id: str = Field(..., description="ID do usuário retornado pelo Facebook ao frontend")
+
+
+class FbSaveResponse(BaseModel):
+    """Resposta da rota POST /oauth/fb/save."""
+    profile_id: str
+    username: str

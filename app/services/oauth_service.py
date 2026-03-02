@@ -215,3 +215,24 @@ def save_oauth_and_profile(ig_user_id: int, username: str, long_lived_token: str
     logging.info(f"Token e perfil salvos para user_id: {ig_user_id}")
 
     return {'profile_id':ig_user_id, 'username':username}
+
+### >> Fetch username and user id via graph api << ###
+
+def fetch_ig_user_info(access_token: str, user_id: str) -> dict | None: 
+    """
+    Busca username e user_id via graph api logo após o login do usuário com instagram ou facebook
+    """
+    url = f"https://graph.facebook.com/{GRAPH_API_VERSION}/{user_id}"
+    params = {
+        'fields': 'id,username',
+        'access_token': access_token
+    }
+
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        logging.info(f'Dados do usuário obtidos com sucesso: {data}')
+        return data
+    
+    logging.error(f'Erro ao obter dados do usuário: {response.text}')
+    return None

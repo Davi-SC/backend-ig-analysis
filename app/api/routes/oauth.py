@@ -3,7 +3,7 @@ Rotas OAuth da Meta (Instagram e Facebook).
 O frontend NÃO tem lógica de OAuth — apenas consome estas rotas.
 """
 
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, HTTPException, Query, Body, status
 import logging
 
 from app.services.oauth_service import (
@@ -13,8 +13,10 @@ from app.services.oauth_service import (
     oauth_short_to_long_lived_token,
     refresh_ig_oauth_token,
     validate_oauth_token,
+    save_oauth_and_profile,
+    fetch_ig_user_info
 )
-from app.domain.schemas.oauth_schemas import OAuthUrlResponse, OAuthCallbackResponse, OAuthTokenValidationResponse
+from app.domain.schemas.oauth_schemas import OAuthUrlResponse, OAuthCallbackResponse, OAuthTokenValidationResponse, FbSaveRequest, FbSaveResponse
 
 logger = logging.getLogger(__name__)
 
@@ -47,10 +49,11 @@ async def get_ig_oauth_url():
 @router.get("/callback", response_model=OAuthCallbackResponse, summary="Troca o code OAuth por token de acesso")
 async def oauth_callback(
     code: str = Query(..., description="Código retornado pelo Instagram/Facebook após o login"),
-    is_instagram_only: bool = Query(False, description="True para fluxo Instagram Business, False para fluxo Facebook")
+    is_instagram_only: bool = Query(True, description="True para fluxo Instagram Business, False para fluxo Facebook(FACEBOOK não precisa mais do callback)")
 ):
     """
-    Recebe o `code` que o Instagram/Facebook envia ao redirect_uri após o login.
+    ESTE CALLBACK SO ESTA SENDO UTILIZANDO NO FLUXO DE OAUTH COM O INSTAGRAM
+    Recebe o `code` que o Instagram envia ao redirect_uri após o login.
     Troca o code por um short-lived token e depois por um long-lived token (~60 dias).
     Para o fluxo Instagram, retorna também o user_id.
     """
@@ -74,6 +77,14 @@ async def oauth_callback(
             )
 
         logger.info("OAuth concluído com sucesso.")
+        user_info = fetch_ig_user_info(long_token, user_id)
+        if user_info:
+            save_oauth_and_profile(
+                ig_user_id = user_info['id'], 
+                username = user_info['username'], 
+                long_lived_token = long_token, 
+                auth_method = 'instagram' if is_instagram_only else 'facebook'
+            )
         return OAuthCallbackResponse(access_token=long_token, user_id=user_id)
 
     except HTTPException:
@@ -82,6 +93,40 @@ async def oauth_callback(
         logger.error(f"Erro no OAuth callback: {e}", exc_info=True)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Erro interno no OAuth callback")
 
+
+
+### >> Salvar token Facebook (implicit flow) << ###
+
+@router.post("/fb/save", response_model=FbSaveResponse, summary="Salva token e perfil do login via Facebook")
+async def fb_save(
+    body: FbSaveRequest = Body(...)
+):
+    """
+    Recebe o token retornado diretamente ao frontend pelo Facebook (implicit flow)
+    e salva o token e os dados básicos de profile no banco.
+    """
+    try:
+        user_info = fetch_ig_user_info(body.access_token, body.user_id)
+        if not user_info:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Não foi possível buscar os dados do usuário na Graph API."
+            )
+
+        result = save_oauth_and_profile(
+            ig_user_id=user_info["id"],
+            username=user_info["username"],
+            long_lived_token=body.access_token,
+            auth_method="facebook"
+        )
+
+        return FbSaveResponse(profile_id=result["profile_id"], username=result["username"])
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Erro ao salvar token Facebook: {e}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Erro interno ao salvar token Facebook")
 
 
 ### >> Validar OAuth token << ###
