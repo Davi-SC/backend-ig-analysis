@@ -2,6 +2,8 @@ import requests
 from urllib.parse import urlencode, parse_qs
 from dotenv import load_dotenv
 import os
+from datetime import datetime, timedelta, UTC
+from app.repositories.mongo_repository import mongo_repo
 
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -172,3 +174,44 @@ def validate_oauth_token(user_token: str) -> dict | None:
 
     logging.error(f'Erro ao validar OAuth token: {response.text}')
     return None
+
+### >> Save oauth token and profile data << ###
+
+def save_oauth_and_profile(ig_user_id: int, username: str, long_lived_token: str, auth_method: str) -> dict:
+    """
+    Salva o long_lived_token na collection de oauth e os dados de profiles na collection de profiles.
+    """
+
+    now = datetime.now(UTC)
+    expires_at = now + timedelta(days=59)
+
+    # Save/Update token
+    mongo_repo.oauth_tokens.update_one(
+        {'profile_id': ig_user_id},
+        {'$set': {
+            'profile_id': ig_user_id,
+            'username': username,
+            'long_lived_token': long_lived_token,
+            'expires_at': expires_at,
+            'create_at': now,
+            'update_at':now,
+            'auth_method': auth_method,
+            'is_valid': True,
+        }},
+        upsert=True
+    )
+
+    # Save/Update basic profile
+    mongo_repo.profiles.update_one(
+        {'ig_user_id': ig_user_id},
+        { '$set':{
+            'ig_user_id': ig_user_id,
+            'username': username,
+            'update_at':now,
+        }},
+        upsert=True
+    )
+
+    logging.info(f"Token e perfil salvos para user_id: {ig_user_id}")
+
+    return {'profile_id':ig_user_id, 'username':username}
