@@ -27,7 +27,8 @@ class OAuthTokenValidationResponse(BaseModel):
 class FbSaveRequest(BaseModel):
     """Body da rota POST /oauth/fb/save — token recebido pelo frontend via implicit flow do Facebook."""
     access_token: str = Field(..., description="Token de acesso retornado pelo Facebook ao frontend")
-    user_id: str = Field(..., description="ID do usuário retornado pelo Facebook ao frontend")
+    user_id: str = Field(..., description="ID da conta Instagram Business")
+    username: Optional[str] = Field(None, description="Username da conta Instagram Business (opcional, buscado no frontend)")
 
 
 class FbSaveResponse(BaseModel):

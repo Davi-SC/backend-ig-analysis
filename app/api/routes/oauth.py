@@ -104,18 +104,27 @@ async def fb_save(
     """
     Recebe o token retornado diretamente ao frontend pelo Facebook (implicit flow)
     e salva o token e os dados básicos de profile no banco.
+    O frontend já envia o username embutido da query da Page, dispensando uma chamada extra à Graph API.
     """
     try:
-        user_info = fetch_ig_user_info(body.access_token, body.user_id)
-        if not user_info:
-            raise HTTPException(
-                status_code=status.HTTP_502_BAD_GATEWAY,
-                detail="Não foi possível buscar os dados do usuário na Graph API."
-            )
+        # Se o frontend já enviou o username (buscado via campos embutidos na Page query), usa direto.
+        # Caso contrário, faz fallback buscando via Graph API.
+        if body.username:
+            ig_user_id = body.user_id
+            username = body.username
+        else:
+            user_info = fetch_ig_user_info(body.access_token, body.user_id)
+            if not user_info:
+                raise HTTPException(
+                    status_code=status.HTTP_502_BAD_GATEWAY,
+                    detail="Não foi possível buscar os dados do usuário na Graph API.",
+                )
+            ig_user_id = user_info["id"]
+            username = user_info.get("username", "")
 
         result = save_oauth_and_profile(
-            ig_user_id=user_info["id"],
-            username=user_info["username"],
+            ig_user_id=ig_user_id,
+            username=username,
             long_lived_token=body.access_token,
             auth_method="facebook"
         )
