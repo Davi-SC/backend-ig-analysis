@@ -107,27 +107,35 @@ async def fb_save(
     O frontend já envia o username embutido da query da Page, dispensando uma chamada extra à Graph API.
     """
     try:
+        logger.info(f"[FB Save] Body recebido — user_id={body.user_id} | username={body.username!r} | token={body.access_token[:20]}...")
+
         # Se o frontend já enviou o username (buscado via campos embutidos na Page query), usa direto.
         # Caso contrário, faz fallback buscando via Graph API.
         if body.username:
+            logger.info("[FB Save] Usando username enviado pelo frontend diretamente.")
             ig_user_id = body.user_id
             username = body.username
         else:
+            logger.warning("[FB Save] username vazio no body — chamando fetch_ig_user_info como fallback.")
             user_info = fetch_ig_user_info(body.access_token, body.user_id)
             if not user_info:
+                logger.error("[FB Save] fetch_ig_user_info retornou None — abortando.")
                 raise HTTPException(
                     status_code=status.HTTP_502_BAD_GATEWAY,
                     detail="Não foi possível buscar os dados do usuário na Graph API.",
                 )
             ig_user_id = user_info["id"]
             username = user_info.get("username", "")
+            logger.info(f"[FB Save] fetch_ig_user_info retornou id={ig_user_id} | username={username!r}")
 
+        logger.info(f"[FB Save] Chamando save_oauth_and_profile — ig_user_id={ig_user_id} | username={username!r}")
         result = save_oauth_and_profile(
             ig_user_id=ig_user_id,
             username=username,
             long_lived_token=body.access_token,
             auth_method="facebook"
         )
+        logger.info(f"[FB Save] save_oauth_and_profile concluído: {result}")
 
         return FbSaveResponse(profile_id=result["profile_id"], username=result["username"])
 

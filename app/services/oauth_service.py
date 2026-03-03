@@ -182,11 +182,13 @@ def save_oauth_and_profile(ig_user_id: int, username: str, long_lived_token: str
     Salva o long_lived_token na collection de oauth e os dados de profiles na collection de profiles.
     """
 
+    logging.info(f"[save_oauth_and_profile] Iniciando save — ig_user_id={ig_user_id} | username={username!r} | auth_method={auth_method}")
+
     now = datetime.now(UTC)
     expires_at = now + timedelta(days=59)
 
     # Save/Update token
-    mongo_repo.oauth_tokens.update_one(
+    token_result = mongo_repo.oauth_tokens.update_one(
         {'profile_id': ig_user_id},
         {'$set': {
             'profile_id': ig_user_id,
@@ -194,27 +196,36 @@ def save_oauth_and_profile(ig_user_id: int, username: str, long_lived_token: str
             'long_lived_token': long_lived_token,
             'expires_at': expires_at,
             'create_at': now,
-            'update_at':now,
+            'update_at': now,
             'auth_method': auth_method,
             'is_valid': True,
         }},
         upsert=True
     )
+    logging.info(
+        f"[save_oauth_and_profile] oauth_tokens upsert — "
+        f"matched={token_result.matched_count} | modified={token_result.modified_count} | "
+        f"upserted_id={token_result.upserted_id}"
+    )
 
     # Save/Update basic profile
-    mongo_repo.profiles.update_one(
+    profile_result = mongo_repo.profiles.update_one(
         {'ig_user_id': ig_user_id},
-        { '$set':{
+        {'$set': {
             'ig_user_id': ig_user_id,
             'username': username,
-            'update_at':now,
+            'update_at': now,
         }},
         upsert=True
     )
+    logging.info(
+        f"[save_oauth_and_profile] profiles upsert — "
+        f"matched={profile_result.matched_count} | modified={profile_result.modified_count} | "
+        f"upserted_id={profile_result.upserted_id}"
+    )
 
-    logging.info(f"Token e perfil salvos para user_id: {ig_user_id}")
-
-    return {'profile_id':ig_user_id, 'username':username}
+    logging.info(f"[save_oauth_and_profile] Concluído para ig_user_id={ig_user_id}")
+    return {'profile_id': ig_user_id, 'username': username}
 
 ### >> Fetch username and user id via graph api << ###
 
