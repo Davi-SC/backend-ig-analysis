@@ -19,7 +19,8 @@ IG_OAUTH_APP_SECRET = os.getenv("IG_APP_SECRET")
 FB_OAUTH_SCOPES = 'instagram_basic,instagram_manage_insights,instagram_manage_comments,pages_show_list,pages_read_engagement'
 IG_OAUTH_SCOPES = 'instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish,instagram_business_manage_insights'
 
-OAUTH_REDIRECT_URI = os.getenv('REDIRECT_URI')
+OAUTH_REDIRECT_URI = os.getenv('REDIRECT_URI')            # usado pelo Instagram
+FB_OAUTH_REDIRECT_URI = os.getenv('FB_REDIRECT_URI', OAUTH_REDIRECT_URI)  # usado pelo Facebook
 GRAPH_API_VERSION = 'v25.0'
 
 
@@ -33,8 +34,8 @@ def generate_fb_oauth_url() -> str:
     params = {
         'client_id': FB_OAUTH_APP_ID,
         'display': 'page',
+        'redirect_uri': FB_OAUTH_REDIRECT_URI,
         # 'extras': '{"setup":{"channel":"IG_API_ONBOARDING"}}',
-        'redirect_uri': OAUTH_REDIRECT_URI,
         'response_type': 'token',
         'scope': FB_OAUTH_SCOPES,
     }
