@@ -77,7 +77,7 @@ async def oauth_callback(
             )
 
         logger.info("OAuth concluído com sucesso.")
-        user_info = fetch_ig_user_info(long_token, user_id)
+        user_info = fetch_ig_user_info(long_token, user_id, is_instagram_only=is_instagram_only)
         if user_info:
             save_oauth_and_profile(
                 ig_user_id = user_info['id'], 

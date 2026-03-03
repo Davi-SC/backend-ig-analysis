@@ -2,7 +2,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 ALLOWED_ORIGINS = [
     "https://socialdatalab.vercel.app",  # produção
-    "http://localhost:3000",             # desenvolvimento local
+    "http://localhost:3000",
+    "http://localhost:8000",   # desenvolvimento local
 ]
 
 def configure_cors(app):

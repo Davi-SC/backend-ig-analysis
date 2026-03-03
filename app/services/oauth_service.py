@@ -218,15 +218,25 @@ def save_oauth_and_profile(ig_user_id: int, username: str, long_lived_token: str
 
 ### >> Fetch username and user id via graph api << ###
 
-def fetch_ig_user_info(access_token: str, user_id: str) -> dict | None: 
+def fetch_ig_user_info(access_token: str, user_id: str = None, is_instagram_only: bool = False) -> dict | None: 
     """
-    Busca username e user_id via graph api logo após o login do usuário com instagram ou facebook
+    Busca username e user_id via graph api logo após o login do usuário com instagram ou facebook.
+    - Fluxo Instagram (is_instagram_only=True): usa graph.instagram.com/me (token IG não é aceito pelo graph.facebook.com)
+    - Fluxo Facebook (is_instagram_only=False): usa graph.facebook.com/{user_id}
     """
-    url = f"https://graph.facebook.com/{GRAPH_API_VERSION}/{user_id}"
-    params = {
-        'fields': 'id,username',
-        'access_token': access_token
-    }
+    if is_instagram_only:
+        # Token do Instagram Business Login só funciona na Instagram Graph API
+        url = f"https://graph.instagram.com/{GRAPH_API_VERSION}/me"
+        params = {
+            'fields': 'id,username',
+            'access_token': access_token
+        }
+    else:
+        url = f"https://graph.facebook.com/{GRAPH_API_VERSION}/{user_id}"
+        params = {
+            'fields': 'id,username',
+            'access_token': access_token
+        }
 
     response = requests.get(url, params=params)
     if response.status_code == 200:
