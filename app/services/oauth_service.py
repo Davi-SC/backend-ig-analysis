@@ -17,7 +17,8 @@ IG_OAUTH_APP_ID = os.getenv('IG_APP_ID')
 IG_OAUTH_APP_SECRET = os.getenv("IG_APP_SECRET")
 
 FB_OAUTH_SCOPES = 'instagram_basic,instagram_manage_insights,instagram_manage_comments,pages_show_list,pages_read_engagement'
-IG_OAUTH_SCOPES = 'instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish,instagram_business_manage_insights'
+# IG_OAUTH_SCOPES = 'instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish,instagram_business_manage_insights'
+IG_OAUTH_SCOPES = 'instagram_business_basic,instagram_business_manage_comments,instagram_business_manage_insights'
 
 OAUTH_REDIRECT_URI = os.getenv('REDIRECT_URI')            # usado pelo Instagram
 FB_OAUTH_REDIRECT_URI = os.getenv('FB_REDIRECT_URI', OAUTH_REDIRECT_URI)  # usado pelo Facebook
