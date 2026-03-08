@@ -4,6 +4,8 @@ ALLOWED_ORIGINS = [
     "https://socialdatalab.vercel.app",  # produção
     "http://localhost:3000",
     "http://localhost:8000",   # desenvolvimento local
+    "https://www.socialdatalab.online", # produção
+    "https://socialdatalab.online", # produção
 ]
 
 def configure_cors(app):
