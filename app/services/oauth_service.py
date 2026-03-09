@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta, UTC
 from app.repositories.mongo_repository import mongo_repo
+from pymongo.errors import DuplicateKeyError
 
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -211,20 +212,35 @@ def save_oauth_and_profile(ig_user_id: int, username: str, long_lived_token: str
     )
 
     # Save/Update basic profile
-    profile_result = mongo_repo.profiles.update_one(
-        {'ig_user_id': ig_user_id},
-        {'$set': {
-            'ig_user_id': ig_user_id,
-            'username': username,
-            'update_at': now,
-        }},
-        upsert=True
-    )
-    logging.info(
-        f"[save_oauth_and_profile] profiles upsert — "
-        f"matched={profile_result.matched_count} | modified={profile_result.modified_count} | "
-        f"upserted_id={profile_result.upserted_id}"
-    )
+    try:
+        profile_result = mongo_repo.profiles.update_one(
+            {'ig_user_id': ig_user_id},
+            {'$set': {
+                'ig_user_id': ig_user_id,
+                'username': username,
+                'update_at': now,
+            }},
+            upsert=True
+        )
+        logging.info(
+            f"[save_oauth_and_profile] profiles upsert — "
+            f"matched={profile_result.matched_count} | modified={profile_result.modified_count} | "
+            f"upserted_id={profile_result.upserted_id}"
+        )
+    except DuplicateKeyError as e:
+        # Índice único incorreto em 'username' no Atlas — deve ser removido manualmente.
+        # Por enquanto, força um update sem upsert para não bloquear o login.
+        logging.warning(
+            f"[save_oauth_and_profile] DuplicateKeyError no upsert de profiles (índice 'username_1' deve ser removido no Atlas): {e}"
+        )
+        mongo_repo.profiles.update_one(
+            {'ig_user_id': ig_user_id},
+            {'$set': {
+                'ig_user_id': ig_user_id,
+                'username': username,
+                'update_at': now,
+            }}
+        )
 
     logging.info(f"[save_oauth_and_profile] Concluído para ig_user_id={ig_user_id}")
     return {'profile_id': ig_user_id, 'username': username}
