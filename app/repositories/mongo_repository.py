@@ -39,7 +39,9 @@ class MongoRepository:
 
         # profiles
         self.profiles.create_index([("ig_user_id", 1)], unique=True)
-        self.profiles.create_index([("username", 1)], unique=True)
+        # username NÃO é unique — pode mudar no Instagram e o mesmo usuário
+        # pode ter registros de fluxos diferentes (Facebook/Instagram login)
+        self.profiles.create_index([("username", 1)])
 
         logging.info("Indexes created successfully!")
 
