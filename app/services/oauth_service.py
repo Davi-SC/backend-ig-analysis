@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta, UTC
 from app.repositories.mongo_repository import mongo_repo
-from pymongo.errors import DuplicateKeyError
 
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -180,17 +179,20 @@ def validate_oauth_token(user_token: str) -> dict | None:
 
 ### >> Save oauth token and profile data << ###
 
-def save_oauth_and_profile(ig_user_id: int, username: str, long_lived_token: str, auth_method: str) -> dict:
+def save_oauth_and_profile(ig_user_id: str, username: str, long_lived_token: str, auth_method: str) -> dict:
     """
-    Salva o long_lived_token na collection de oauth e os dados de profiles na collection de profiles.
-    """
+    Salva o long_lived_token em 'oauth_tokens' e cria/atualiza o perfil em 'ig_profiles'.
 
-    logging.info(f"[save_oauth_and_profile] Iniciando save — ig_user_id={ig_user_id} | username={username!r} | auth_method={auth_method}")
+    'ig_profiles' é o ponto único de dados de perfil Instagram. Esta função faz o upsert com
+    os dados básicos disponíveis no momento do OAuth (profile_id, username, auth_method).
+    Os campos biography, website e ig_account_type serão preenchidos depois pelo profile_service DAG.
+    """
+    logging.info(f"[save_oauth_and_profile] Iniciando upsert — profile_id={ig_user_id} | username={username!r} | auth_method={auth_method}")
 
     now = datetime.now(UTC)
     expires_at = now + timedelta(days=59)
 
-    # Save/Update token
+    # --- Upsert 1: token OAuth ---
     token_result = mongo_repo.oauth_tokens.update_one(
         {'profile_id': ig_user_id},
         {'$set': {
@@ -198,11 +200,11 @@ def save_oauth_and_profile(ig_user_id: int, username: str, long_lived_token: str
             'username': username,
             'long_lived_token': long_lived_token,
             'expires_at': expires_at,
-            'create_at': now,
-            'update_at': now,
+            'updated_at': now,
             'auth_method': auth_method,
             'is_valid': True,
-        }},
+        },
+        '$setOnInsert': {'created_at': now}},
         upsert=True
     )
     logging.info(
@@ -211,38 +213,28 @@ def save_oauth_and_profile(ig_user_id: int, username: str, long_lived_token: str
         f"upserted_id={token_result.upserted_id}"
     )
 
-    # Save/Update basic profile
-    try:
-        profile_result = mongo_repo.profiles.update_one(
-            {'ig_user_id': ig_user_id},
-            {'$set': {
-                'ig_user_id': ig_user_id,
-                'username': username,
-                'update_at': now,
-            }},
-            upsert=True
-        )
-        logging.info(
-            f"[save_oauth_and_profile] profiles upsert — "
-            f"matched={profile_result.matched_count} | modified={profile_result.modified_count} | "
-            f"upserted_id={profile_result.upserted_id}"
-        )
-    except DuplicateKeyError as e:
-        # Índice único incorreto em 'username' no Atlas — deve ser removido manualmente.
-        # Por enquanto, força um update sem upsert para não bloquear o login.
-        logging.warning(
-            f"[save_oauth_and_profile] DuplicateKeyError no upsert de profiles (índice 'username_1' deve ser removido no Atlas): {e}"
-        )
-        mongo_repo.profiles.update_one(
-            {'ig_user_id': ig_user_id},
-            {'$set': {
-                'ig_user_id': ig_user_id,
-                'username': username,
-                'update_at': now,
-            }}
-        )
+    # --- Upsert 2: perfil em ig_profiles ---
+    # $setOnInsert garante que created_at só é definido na inserção inicial.
+    # Se o perfil já existe (re-login), apenas atualiza username, auth_method e updated_at.
+    account_result = mongo_repo.ig_profiles.update_one(
+        {'profile_id': ig_user_id},
+        {'$set': {
+            'profile_id': ig_user_id,
+            'username': username,
+            'auth_method': auth_method,
+            'is_active': True,
+            'updated_at': now,
+        },
+        '$setOnInsert': {'created_at': now}},
+        upsert=True
+    )
+    logging.info(
+        f"[save_oauth_and_profile] ig_profiles upsert — "
+        f"matched={account_result.matched_count} | modified={account_result.modified_count} | "
+        f"upserted_id={account_result.upserted_id}"
+    )
 
-    logging.info(f"[save_oauth_and_profile] Concluído para ig_user_id={ig_user_id}")
+    logging.info(f"[save_oauth_and_profile] Concluído para profile_id={ig_user_id}")
     return {'profile_id': ig_user_id, 'username': username}
 
 ### >> Fetch username and user id via graph api << ###
