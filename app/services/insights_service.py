@@ -224,9 +224,9 @@ def fetch_interaction_metrics(
     Retorna dict {metric_name: total_value}.
     """
     if auth_method == "facebook":
-        metrics = "reach,profile_views,total_interactions,follows_and_unfollows"
+        metrics = "accounts_engaged,views,reach,profile_views,total_interactions,follows_and_unfollows"
     else:
-        metrics = "reach,profile_views,total_interactions"
+        metrics = "accounts_engaged,views,reach,profile_views,total_interactions"
 
     since_ts = int(time.mktime(since.timetuple()))
     until_ts = int(time.mktime(until.timetuple()))
@@ -381,6 +381,8 @@ def run_profile_insights_service(
         "period_until":    until_dt.isoformat(),
         "collected_at":    collected_at,
         # Métricas de interação (None se não disponíveis)
+        "accounts_engaged":       interaction.get("accounts_engaged"),
+        "views":                  interaction.get("views"),
         "reach":                  interaction.get("reach"),
         "profile_views":          interaction.get("profile_views"),
         "total_interactions":     interaction.get("total_interactions"),

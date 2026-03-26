@@ -103,17 +103,7 @@ def calculate_metrics_for_post(
     relative_reach = reach / safe_followers
     amplification_rate = shares / safe_reach
 
-    # 8 - Loyalty Rate (Sanches & Ramos 2025)
-    # page_interaction_rate = unique_accounts / reach. A API de Insights retorna total_interactions, 
-    # porém profile_activity e interações agregadas muitas vezes são proxies para contas engajadas. 
-    # Para fidelidade acadêmica ao "unique accounts", usaremos o reach do post engajado vs total_interactions.
-    # Por padrão a Graph API não devolve "número de contas únicas que engajaram" por post, 
-    # então usamos total_interactions como melhor proxy computável para a taxa.
-    page_interaction_rate = total_interactions / safe_reach
-    virality_rate = total_interactions / safe_views
-    loyalty_rate = page_interaction_rate / virality_rate if virality_rate > 0 else 0.0
-
-    # 9 - ER Views (Hootsuite proxy para impressions)
+    # 8 e 9 - ER Views (Hootsuite proxy para impressions)
     er_views = total_interactions / safe_views
 
     # 10 e 11 - Velocidade
@@ -132,9 +122,9 @@ def calculate_metrics_for_post(
         "relative_reach": relative_reach,
         "amplification_rate": amplification_rate,
         
-        "loyalty_rate": loyalty_rate,
-        "page_interaction_rate": page_interaction_rate,
-        "virality_rate": virality_rate,
+        # "loyalty_rate": loyalty_rate,
+        # "page_interaction_rate": page_interaction_rate,
+        # "virality_rate": virality_rate,
         "er_views": er_views,
         
         "velocity_likes_24h": vel_likes,
