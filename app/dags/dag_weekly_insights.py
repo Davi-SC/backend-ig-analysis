@@ -2,12 +2,13 @@
 DAG: dag_weekly_insights
 
 Orquestra o pipeline semanal de métricas de conta e crescimento de perfil Instagram.
-Este DAG complementa o dag_instagram_etl, focando nas métricas que fazem sentido numa janela de 7 dias:
+Este DAG complementa o dag_instagram_etl, focando nas métricas que fazem sentido
+na janela de 7 dias:
 
   - Coleta de profile insights da Graph API (accounts_engaged, views, reach,
-    demographics), que a Meta só disponibiliza com aggregação de período.
-  - Cálculo de crescimento de seguidores (7d) e Loyalty Rate, que dependem dos profile_insights coletados acima.
-  - Qualificação da audiência — a implementar quandoqualification_service estiver pronto.
+    demographics), que a Meta só disponibiliza com agregação de período.
+  - Cálculo de crescimento de seguidores (7d) que depende dos profile_snapshots
+    coletados diariamente pelo dag_instagram_etl.
 
 Fluxo de execução (bitshift >>):
 
@@ -16,9 +17,9 @@ Fluxo de execução (bitshift >>):
 
     [TRANSFORM — métricas de perfil]
         >> transform_growth
-        >> transform_qualification  (placeholder — ativado quando qualification_service existir)
 
-Pré-requisito: dag_instagram_etl deve ter rodado pelo menos uma vez antes, para que profile_snapshots e posts existam no banco.
+Pré-requisito: dag_instagram_etl deve ter rodado pelo menos uma vez antes,
+para que profile_snapshots existam no banco.
 
 Configuração:
     - AIRFLOW_VAR_IG_PROFILE_ID : profile_id do usuário Instagram a processar
@@ -136,14 +137,5 @@ with DAG(
         python_callable=task_fn_growth,
     )
 
-    t_qualification = PythonOperator(
-        task_id="transform_qualification",
-        python_callable=task_fn_qualification,
-    )
-
     # ------ DEPENDÊNCIAS ------
-    (
-        t_profile_insights
-        >> t_growth
-        >> t_qualification
-    )
+    t_profile_insights >> t_growth

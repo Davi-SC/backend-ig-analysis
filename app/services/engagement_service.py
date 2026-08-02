@@ -1,21 +1,18 @@
 """
 Transform Service 2.1 — engagement_service
-Calcula métricas derivadas de engajamento para cada post com base nos 
+Calcula métricas derivadas de engajamento para cada post com base nos
 snapshots diários (post_snapshots) e insights de lifetime (post_insights).
 
 Fórmulas implementadas:
-1. er_simple = (likes + comments) / followers
-2. er_weighted_post = (shares*1.42 + likes*1.25 + comments*1.0 + saves*1.0) / followers
-3. er_reach_weighted_post = (shares*1.42 + likes*1.25 + comments*1.0 + saves*1.0) / reach
-4. er_reach = total_interactions / reach
-5. er_followers = total_interactions / followers
-6. relative_reach = reach / followers
-7. amplification_rate = shares / reach
-8. loyalty_rate = (unique_accounts_engaged / reach) / (total_interactions / views)  [Sanches & Ramos, 2025]
-9. er_views = total_interactions / views  [Substitui er_impressions Hootsuite]
-10. velocity_likes_24h = delta de likes no dia
-11. velocity_comments_24h = delta de comentários no dia
-12. days_since_published = dias entre a publicação e a coleta
+1. er_simple          = (likes + comments) / followers
+2. er_reach           = total_interactions / reach
+3. er_followers       = total_interactions / followers
+4. er_views           = total_interactions / views  [proxy Hootsuite para impressions]
+5. relative_reach     = reach / followers
+6. amplification_rate = shares / reach               [e-WOM / advocacia]
+7. velocity_likes_24h    = delta de likes em 24h
+8. velocity_comments_24h = delta de comentários em 24h
+9. days_since_published  = dias entre publicação e coleta
 
 Destino: collection `engagement_metrics` (único por post_id + date).
 """
@@ -92,46 +89,31 @@ def calculate_metrics_for_post(
     safe_reach = reach if reach > 0 else 1
     safe_views = views if views > 0 else 1
 
-    # 1 a 7 - Engajamento Simples e Ponderados
+    # Métricas de engajamento
     er_simple = (likes + comments) / safe_followers
-    
-    weighted_sum = (shares * 1.42) + (likes * 1.25) + (comments * 1.0) + (saves * 1.0)
-    er_weighted_post = weighted_sum / safe_followers
-    er_reach_weighted_post = weighted_sum / safe_reach
     er_reach = total_interactions / safe_reach
     er_followers = total_interactions / safe_followers
     relative_reach = reach / safe_followers
     amplification_rate = shares / safe_reach
-
-    # 8 e 9 - ER Views (Hootsuite proxy para impressions)
-    er_views = total_interactions / safe_views
+    er_views = total_interactions / safe_views  # proxy Hootsuite para impressions
 
     # 10 e 11 - Velocidade
     vel_likes, vel_comments = _calculate_velocity(post["post_id"], current_date, likes, comments)
 
     return {
-        "post_id": post["post_id"],
-        "profile_id": post["profile_id"],
-        "date": current_date_str,
-        
-        "er_simple": er_simple,
-        "er_weighted_post": er_weighted_post,
-        "er_reach_weighted_post": er_reach_weighted_post,
-        "er_reach": er_reach,
-        "er_followers": er_followers,
-        "relative_reach": relative_reach,
-        "amplification_rate": amplification_rate,
-        
-        # "loyalty_rate": loyalty_rate,
-        # "page_interaction_rate": page_interaction_rate,
-        # "virality_rate": virality_rate,
-        "er_views": er_views,
-        
-        "velocity_likes_24h": vel_likes,
+        "post_id":               post["post_id"],
+        "profile_id":            post["profile_id"],
+        "date":                  current_date_str,
+        "er_simple":             er_simple,
+        "er_reach":              er_reach,
+        "er_followers":          er_followers,
+        "er_views":              er_views,
+        "relative_reach":        relative_reach,
+        "amplification_rate":    amplification_rate,
+        "velocity_likes_24h":    vel_likes,
         "velocity_comments_24h": vel_comments,
-        "days_since_published": days_since_published,
-        
-        "calculated_at": collected_at
+        "days_since_published":  days_since_published,
+        "calculated_at":         collected_at,
     }
 
 

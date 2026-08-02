@@ -2,19 +2,12 @@
 Transform Service 2.2 — growth_service
 
 Rodado pelo dag_weekly_insights (semanal). Lê os profile_snapshots de um perfil
-e calcula o crescimento de seguidores e publicações na janela de 7 dias,
-além do Loyalty Rate usando profile_insights do mesmo período.
+e calcula o crescimento de seguidores e publicações na janela de 7 dias.
 
 Métricas calculadas e salvas em profile_snapshots:
 - followers_growth_7d       (absoluto — delta de 7 dias)
 - followers_growth_7d_pct   (percentual)
 - media_growth_7d           (posts publicados na semana)
-- loyalty_rate              (page_interaction_rate / virality_rate)
-- page_interaction_rate     (accounts_engaged / reach)
-- virality_rate             (total_interactions / views)
-
-Nota: métricas de 24h (followers_growth_24h, media_growth_24h) foram removidas
-pois o service roda semanalmente e as métricas diárias perdem significado nesse contexto.
 
 Destino: campo `growth` dentro do documento em `profile_snapshots` da data-alvo.
 """
@@ -114,29 +107,6 @@ def run_growth_service(profile_id: str, target_date: date | None = None) -> dict
 
     growth_data = calculate_growth_for_snapshot(current_snap, prev_snap_7d)
     growth_data["calculated_at"] = datetime.now(timezone.utc)
-
-    # Lógica de Loyalty Rate (Sanches & Ramos, 2025)
-    # Requer que o `profile_insights` diário tenha rodado primeiro para coletar accounts_engaged
-    insight_doc = mongo_repo.profile_insights.find_one({"profile_id": profile_id, "period_until": date_str})
-    if insight_doc:
-        reach = insight_doc.get("reach") or 0
-        accounts_engaged = insight_doc.get("accounts_engaged") or 0
-        total_interactions = insight_doc.get("total_interactions") or 0
-        views = insight_doc.get("views") or 0
-        
-        safe_reach = reach if reach > 0 else 1
-        safe_views = views if views > 0 else 1
-        
-        page_interaction_rate = accounts_engaged / safe_reach
-        virality_rate = total_interactions / safe_views
-        
-        loyalty_rate = page_interaction_rate / virality_rate if virality_rate > 0 else 0.0
-        
-        growth_data["loyalty_rate"] = loyalty_rate
-        growth_data["page_interaction_rate"] = page_interaction_rate
-        growth_data["virality_rate"] = virality_rate
-    else:
-        logger.warning(f"[growth_service] profile_insights não encontrado para {profile_id} em {date_str}. Loyalty Rate omitido.")
 
     # Aplica o update no próprio profile_snapshots
     try:
