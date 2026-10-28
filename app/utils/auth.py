@@ -75,11 +75,14 @@ def get_authenticated_profile(x_profile_id: str = Header(..., alias="X-Profile-I
         )
 
     expires_at = token_doc.get("expires_at")
-    if expires_at and expires_at < datetime.now(timezone.utc):
-        logger.warning(f"[auth] Token expirado para profile_id={profile_id}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token expirado. Faça login novamente.",
-        )
+    if expires_at:
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+        if expires_at < datetime.now(timezone.utc):
+            logger.warning(f"[auth] Token expirado para profile_id={profile_id}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token expirado. Faça login novamente.",
+            )
 
     return profile_id

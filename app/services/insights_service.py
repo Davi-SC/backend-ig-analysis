@@ -76,9 +76,12 @@ def _get_token_doc(profile_id: str) -> dict | None:
         logger.error(f"[insights_service] Token inválido para profile_id={profile_id}")
         return None
     expires_at = doc.get("expires_at")
-    if expires_at and expires_at < datetime.now(timezone.utc):
-        logger.error(f"[insights_service] Token expirado para profile_id={profile_id}")
-        return None
+    if expires_at:
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+        if expires_at < datetime.now(timezone.utc):
+            logger.error(f"[insights_service] Token expirado para profile_id={profile_id}")
+            return None
     return doc
 
 

@@ -64,7 +64,7 @@ class MongoRepository:
     """
 
     def __init__(self):
-        self.client = MongoClient(settings.MONGO_URI)
+        self.client = MongoClient(settings.MONGO_URI, tz_aware=True)
         self.db = self.client[settings.DB_NAME]
 
         try:
