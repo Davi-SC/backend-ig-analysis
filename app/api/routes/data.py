@@ -43,7 +43,7 @@ def _clean_list(docs: list) -> list:
 @router.get(
     "/profile",
     summary="Dados do perfil",
-    description="Retorna os dados estáticos do perfil Instagram autenticado.",
+    description="Retorna os dados estáticos do perfil Instagram autenticado com os contadores mais recentes.",
 )
 async def get_profile(profile_id: str = Depends(get_authenticated_profile)):
     doc = mongo_repo.ig_profiles.find_one({"profile_id": profile_id})
@@ -52,7 +52,19 @@ async def get_profile(profile_id: str = Depends(get_authenticated_profile)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Perfil não encontrado. Execute /collect/initial primeiro.",
         )
-    return _clean(doc)
+    clean_doc = _clean(doc)
+    
+    # Anexa os contadores mais recentes do último profile_snapshot se não estiverem no doc
+    latest_snap = mongo_repo.profile_snapshots.find_one(
+        {"profile_id": profile_id},
+        sort=[("date", -1)]
+    )
+    if latest_snap:
+        clean_doc["followers_count"] = latest_snap.get("followers_count", clean_doc.get("followers_count", 0))
+        clean_doc["follows_count"] = latest_snap.get("follows_count", clean_doc.get("follows_count", 0))
+        clean_doc["media_count"] = latest_snap.get("media_count", clean_doc.get("media_count", 0))
+    
+    return clean_doc
 
 
 @router.get(
