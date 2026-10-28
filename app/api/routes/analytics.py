@@ -266,3 +266,68 @@ async def engagement_trend(
     results = list(mongo_repo.engagement_metrics.aggregate(pipeline))
 
     return {"profile_id": profile_id, "days": days, "count": len(results), "data": results}
+
+
+@router.get(
+    "/qualification",
+    summary="IQA — Índice de Qualidade de Audiência",
+    description=(
+        "Retorna o IQA (Índice de Qualidade de Audiência) do perfil, calculado a partir "
+        "dos dados reais coletados pelo pipeline ELT. "
+        "O IQA combina a mediana da Taxa de Engajamento (TE) e o Coeficiente de Variação (CV) "
+        "num score composto [0–1], classificando o perfil em tiers A/B/C/D. "
+        "Metodologia validada no TCC: Cruz & Santos (2026). "
+        "Para calcular, execute primeiro o dag_weekly_insights (qualification_service). "
+        "O parâmetro `lookback_days` filtra o histórico de cálculos retornados."
+    ),
+)
+async def audience_qualification(
+    lookback_days: int = Query(
+        default=30,
+        ge=1,
+        le=365,
+        description="Janela de análise em dias (filtra o histórico de cálculos)",
+    ),
+    profile_id: str = Depends(get_authenticated_profile),
+):
+    from datetime import timedelta
+
+    since = (datetime.now(timezone.utc) - timedelta(days=lookback_days)).date().isoformat()
+
+    # Busca os registros de qualificação do perfil dentro da janela
+    records = list(
+        mongo_repo.audience_qualification.find(
+            {"profile_id": profile_id, "calculated_date": {"$gte": since}},
+            {"_id": 0},
+            sort=[("calculated_date", -1)],
+        )
+    )
+
+    if not records:
+        return {
+            "profile_id": profile_id,
+            "message": (
+                "Nenhum resultado de qualificação encontrado. "
+                "Execute o qualification_service via dag_weekly_insights ou "
+                "POST /collect/initial e aguarde pelo menos 1 dia de coleta."
+            ),
+            "data": [],
+        }
+
+    # O mais recente é o primeiro (ordenado por calculated_date DESC)
+    latest = records[0]
+
+    return {
+        "profile_id": profile_id,
+        "latest": {
+            "calculated_date": latest.get("calculated_date"),
+            "tier": latest.get("tier"),
+            "score": latest.get("score"),
+            "te_median": latest.get("te_median"),
+            "te_cv": latest.get("te_cv"),
+            "posts_analyzed": latest.get("posts_analyzed"),
+            "lookback_days": latest.get("lookback_days"),
+        },
+        "history_count": len(records),
+        "history": records,
+    }

@@ -26,6 +26,13 @@ x-airflow-common: &airflow-common
     # Python path — expõe o pacote `app` para os imports nos DAGs
     PYTHONPATH: /opt/airflow/project
 
+    # Dependências do projeto instaladas automaticamente nos containers
+    _PIP_ADDITIONAL_REQUIREMENTS: >-
+      pymongo==4.16.0
+      pydantic-settings==2.13.1
+      fastapi==0.128.0
+      uvicorn==0.40.0
+
     # Variáveis de ambiente do projeto (lidas pelos services via os.environ / python-dotenv)
     MONGO_URI: ${MONGO_URI}
     DB_NAME: ${DB_NAME}

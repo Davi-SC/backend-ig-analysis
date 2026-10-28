@@ -96,7 +96,7 @@ async def collect_refresh(profile_id: str = Depends(get_authenticated_profile)):
     """
     Atualização rápida — apenas dados recentes, sem redescoberta de posts.
 
-    Indicado para execuções recorrentes. O Airflow (dag_instagram_etl) faz
+    Indicado para execuções recorrentes. O Airflow (dag_instagram_elt) faz
     a mesma coisa automaticamente @daily — este endpoint é para atualizações manuais.
     """
     logger.info(f"[collect/refresh] Iniciando atualização rápida para profile_id={profile_id}")

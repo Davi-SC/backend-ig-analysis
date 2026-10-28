@@ -13,12 +13,33 @@ load_dotenv()
 
 # Criar aplicativo FastAPI
 app = FastAPI(
-    title="Instagram Analytics API",
+    title="Instagram Analytics API — PIBIC/IFMA",
     description=(
-        "API para coleta, processamento e análise de dados de perfis Instagram. "
-        "Autenticação via header **X-Profile-ID** (retornado após o login OAuth)."
+        "**Pipeline ELT para Qualificação de Audiência em Redes Sociais**\n\n"
+        "API desenvolvida como parte da pesquisa PIBIC 2025/2026 no "
+        "Instituto Federal do Maranhão (IFMA) — Campus Coelho Neto.\n\n"
+        "**Pesquisador:** Davi Silva da Cruz  \n"
+        "**Orientador:** Francisco Alan de Oliveira Santos  \n\n"
+        "---\n\n"
+        "**Resumo do projeto:**  \n"
+        "Implementa um processo sistemático de coleta, transformação e qualificação "
+        "de dados públicos de perfis Instagram Business via Meta Graph API v25.0. "
+        "O **IQA (Índice de Qualidade de Audiência)** combina a mediana da Taxa de "
+        "Engajamento (TE) e o Coeficiente de Variação (CV) num score composto [0–1], "
+        "classificando o perfil em tiers **A/B/C/D**.\n\n"
+        "**Referência metodológica:**  \n"
+        "Cruz, D.S.; Santos, F.A.O. (2026). *Indicador Multidimensional para "
+        "Qualificação de Audiência de Perfis no Instagram*. TCC — IFMA.\n\n"
+        "**Autenticação:** header `X-Profile-ID` (retornado após fluxo OAuth em `/oauth`)."
     ),
     version="1.0.0",
+    contact={
+        "name": "Davi Silva da Cruz — IFMA Campus Coelho Neto",
+        "email": "davi.cruz@academico.ifma.edu.br",
+    },
+    license_info={
+        "name": "Acadêmico — Uso restrito a fins de pesquisa (IFMA/PIBIC)",
+    },
 )
 
 # Configurar CORS

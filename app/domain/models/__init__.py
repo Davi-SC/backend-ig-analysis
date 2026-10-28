@@ -1,5 +1,5 @@
 """
-Pacote de models de domínio — ETL Instagram Analytics.
+Pacote de models de domínio — ELT Instagram Analytics.
 """
 
 from .ig_profile import IgProfile

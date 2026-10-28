@@ -77,6 +77,14 @@ def calculate_metrics_for_post(
     comments = snapshot.get("comments_count", 0)
     followers = snapshot.get("followers_at_date", 0)
 
+    if not followers:
+        logger.warning(
+            f"[engagement_service] followers_at_date ausente ou zero para "
+            f"post {post['post_id']} em {current_date_str}. "
+            "ER calculado com followers=1 (valores distorcidos). "
+            "Verifique se snapshot_service rodou com sucesso no mesmo dia."
+        )
+
     # Base API Insights (acumulado)
     reach = insights.get("reach", 0)
     shares = insights.get("shares", 0)

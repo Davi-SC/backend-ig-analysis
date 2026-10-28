@@ -1,21 +1,24 @@
 """
-DAG: dag_instagram_etl
+DAG: dag_instagram_elt
 
-Orquestra o pipeline ETL de coleta (Extract) e transformações de posts (Transform) para dados Instagram.
+Orquestra o pipeline ELT diário de dados Instagram:
+    - Extract + Load: coleta da Meta Graph API e carga dos dados brutos no MongoDB.
+    - Transform: cálculo de métricas a partir dos dados brutos já carregados no MongoDB,
+      com gravação em coleções derivadas.
 
 Fluxo de execução (bitshift >>):
 
-    [EXTRACT]
-    extract_profile
-        >> extract_media_discovery
-        >> extract_snapshot
-        >> extract_post_insights
-        >> extract_comments
+    [EXTRACT + LOAD — dados brutos]
+    extract_load_profile            -> ig_profiles
+        >> extract_load_media_discovery -> posts
+        >> extract_load_snapshot        -> profile_snapshots, post_snapshots
+        >> extract_load_post_insights   -> post_insights
+        >> extract_load_comments        -> comments
 
-    [TRANSFORM — métricas de posts]  ← só inicia após toda a cadeia de extração
-        >> transform_engagement
-        >> transform_video_metrics
-        >> transform_sentiment
+    [TRANSFORM — métricas de posts]  ← só inicia após toda a cadeia de extração/carga
+        >> transform_engagement     -> engagement_metrics
+        >> transform_video_metrics  -> engagement_metrics
+        >> transform_sentiment      -> comments (desativado)
 
 Nota: transform_growth e loyaty_rate são responsabilidade do dag_weekly_insights,
 pois dependem de profile_insights (account-level) que é coletado semanalmente.
@@ -39,7 +42,7 @@ from airflow import DAG
 from airflow.models import Variable
 from airflow.operators.python import PythonOperator
 
-# Import dos serviços ETL
+# Import dos serviços ELT
 from app.services.profile_service import run_profile_service
 from app.services.media_discovery_service import run_media_discovery_service
 from app.services.snapshot_service import run_snapshot_service
@@ -52,12 +55,12 @@ from app.services.sentiment_service import run_sentiment_service
 logger = logging.getLogger(__name__)
 
 # Configuração central
-DAG_ID = "dag_instagram_etl"
+DAG_ID = "dag_instagram_elt"
 SCHEDULE_INTERVAL = "@daily"
 START_DATE = datetime(2025, 1, 1)
 CATCHUP = False                        # não reprocessa dias/semanas anteriores
 DEFAULT_ARGS = {
-    "owner": "etl",
+    "owner": "elt",
     "retries": 1,
     "retry_delay_seconds": 300,        # 5 min entre tentativas
     "email_on_failure": False,
@@ -142,14 +145,14 @@ def task_fn_video_metrics(**context):
     _log_result("video_metrics_service", result)
 
 
-def task_fn_sentiment(**context):
-    """
-    Processa TODOS os comentários sem score do perfil.
-    Não usa target_date: o serviço já filtra por índice sparse (sem sentiment_score).
-    """
-    profile_id = _get_profile_id()
-    result = run_sentiment_service(profile_id=profile_id)
-    _log_result("sentiment_service", result)
+# def task_fn_sentiment(**context):
+#     """
+#     Processa TODOS os comentários sem score do perfil.
+#     Não usa target_date: o serviço já filtra por índice sparse (sem sentiment_score).
+#     """
+#     profile_id = _get_profile_id()
+#     result = run_sentiment_service(profile_id=profile_id)
+#     _log_result("sentiment_service", result)
 
 
 # Definição do DAG
@@ -159,37 +162,37 @@ with DAG(
     start_date=START_DATE,
     catchup=CATCHUP,
     default_args=DEFAULT_ARGS,
-    tags=["instagram", "etl", "extract", "transform"],
+    tags=["instagram", "elt", "extract", "load", "transform"],
     doc_md=__doc__,
 ) as dag:
 
-    # ------ EXTRACT ------
+    # ------ EXTRACT + LOAD (dados brutos -> MongoDB) ------
     t_profile = PythonOperator(
-        task_id="extract_profile",
+        task_id="extract_load_profile",
         python_callable=task_fn_profile,
     )
 
     t_media_discovery = PythonOperator(
-        task_id="extract_media_discovery",
+        task_id="extract_load_media_discovery",
         python_callable=task_fn_media_discovery,
     )
 
     t_snapshot = PythonOperator(
-        task_id="extract_snapshot",
+        task_id="extract_load_snapshot",
         python_callable=task_fn_snapshot,
     )
 
     t_post_insights = PythonOperator(
-        task_id="extract_post_insights",
+        task_id="extract_load_post_insights",
         python_callable=task_fn_post_insights,
     )
 
     t_comments = PythonOperator(
-        task_id="extract_comments",
+        task_id="extract_load_comments",
         python_callable=task_fn_comments,
     )
 
-    # ------ TRANSFORM ------
+    # ------ TRANSFORM (MongoDB -> coleções derivadas) ------
     t_engagement = PythonOperator(
         task_id="transform_engagement",
         python_callable=task_fn_engagement,
@@ -200,10 +203,10 @@ with DAG(
         python_callable=task_fn_video_metrics,
     )
 
-    t_sentiment = PythonOperator(
-        task_id="transform_sentiment",
-        python_callable=task_fn_sentiment,
-    )
+    # t_sentiment = PythonOperator(
+    #     task_id="transform_sentiment",
+    #     python_callable=task_fn_sentiment,
+    # )
 
     # Dependências (pipeline linear)
     # transform_growth está no dag_weekly_insights (requer profile_insights account-level)
@@ -215,5 +218,5 @@ with DAG(
         >> t_comments
         >> t_engagement
         >> t_video_metrics
-        >> t_sentiment
+
     )

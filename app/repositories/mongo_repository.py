@@ -1,31 +1,48 @@
 """
-Repositório central do MongoDB para o projeto Instagram Analytics ETL.
+Repositório central do MongoDB para o projeto Instagram Analytics ELT.
 
 Este módulo é o único ponto de contato entre os services Python e o MongoDB Atlas.
 Todos os services importam `mongo_repo` daqui — nunca instanciam MongoClient diretamente.
 
+Arquitetura ELT — todas as camadas ficam no mesmo banco, separadas por collection:
+  - Extract+Load (dados brutos da API): ig_profiles, profile_snapshots, profile_insights,
+    posts, post_snapshots, post_insights, comments
+  - Transform (dados derivados, calculados a partir das coleções brutas):
+    engagement_metrics, audience_qualification
+  - Exceção conhecida: growth_service grava o campo derivado `growth` dentro de
+    profile_snapshots (coleção bruta). Melhoria futura: mover para `growth_metrics`.
+    Detalhes na docstring de app/services/growth_service.py.
+
 Nomenclatura das collections:
-  'ig_profiles'      ->  perfis Instagram conectados
-  'profile_snapshots'-> série temporal diária do perfil
-  'profile_insights' -> métricas semanais + dados demográficos
-  'posts'            -> metadados imutáveis de posts
-  'post_snapshots'   -> série temporal diária de posts
-  'post_insights'    -> métricas acumuladas lifetime de posts
-  'comments'         -> comentários e replies embutidas
-  'engagement_metrics'-> calculadas pelo Transform ETL
-  'oauth_tokens'     -> tokens de acesso OAuth
+  'ig_profiles'           ->  perfis Instagram conectados
+  'profile_snapshots'     ->  série temporal diária do perfil (+ campo derivado `growth`, ver exceção)
+  'profile_insights'      ->  métricas semanais + dados demográficos
+  'posts'                 ->  metadados imutáveis de posts
+  'post_snapshots'        ->  série temporal diária de posts
+  'post_insights'         ->  métricas acumuladas lifetime de posts
+  'comments'              ->  comentários e replies embutidas
+  'engagement_metrics'    ->  calculadas pelo Transform ELT (engagement_service)
+  'audience_qualification'->  IQA calculado pelo qualification_service
+  'oauth_tokens'          ->  tokens de acesso OAuth
 
 Collections e seus índices:
 
-    ig_profiles -> profile_id (unique), username, is_active
-    profile_snapshots -> (profile_id, date) unique ← UM snapshot por perfil por dia
-    posts -> post_id (unique), profile_id, published_at
-    post_snapshots -> (post_id, date) unique ← UM snapshot por post por dia
-    post_insights -> (post_id, collected_at) - série temporal acumulada
-    comments -> comment_id (unique), post_id, profile_id
-    profile_insights -> (profile_id, period_until) unique
-    engagement_metrics -> (post_id, date) unique, profile_id, date
-    oauth_tokens -> profile_id (unique), long_lived_token (unique), is_valid
+    ig_profiles             -> profile_id (unique), username, is_active
+    profile_snapshots       -> (profile_id, date) unique
+    posts                   -> post_id (unique), profile_id, published_at
+    post_snapshots          -> (post_id, date) unique
+    post_insights           -> (post_id, collected_at) - série temporal acumulada
+    comments                -> comment_id (unique), post_id, profile_id
+    profile_insights        -> (profile_id, period_until) unique
+    engagement_metrics      -> (post_id, date) unique, profile_id, date
+    audience_qualification  -> (profile_id, calculated_date) unique
+    oauth_tokens            -> profile_id (unique), long_lived_token (unique), is_valid
+
+Nota sobre inicialização:
+    O singleton `mongo_repo` usa lazy initialization via _LazyProxy.
+    A conexão com o MongoDB só é estabelecida na primeira chamada a uma collection,
+    não no import do módulo. Isso evita que o Airflow falhe ao carregar DAGs
+    quando o MongoDB Atlas estiver temporariamente indisponível.
 """
 
 from pymongo import MongoClient, ASCENDING, DESCENDING
@@ -84,6 +101,9 @@ class MongoRepository:
         """
         Série temporal diária do perfil (followers, following, media_count).
         Escrito pelo snapshot_service. Índice único: (profile_id, date).
+
+        Exceção ELT: o growth_service (Transform) também escreve aqui, no campo
+        `growth`. Melhoria futura: mover para uma collection `growth_metrics`.
         """
         return self.db["profile_snapshots"]
 
@@ -133,11 +153,21 @@ class MongoRepository:
     @property
     def engagement_metrics(self):
         """
-        Métricas calculadas de engajamento (ER weighted, velocity, loyalty).
+        Métricas calculadas de engajamento (er_simple, er_reach, velocity, etc.).
         NÃO vem da API — é calculada pelo engagement_service.
-        Alimenta o pipeline de ML do TCC.
+        Ref: Cruz & Santos (2026); Kim et al. (2020); Hootsuite (er_views)
         """
         return self.db["engagement_metrics"]
+
+    @property
+    def audience_qualification(self):
+        """
+        IQA (Índice de Qualidade de Audiência) por perfil e data.
+        Calculado pelo qualification_service com base nos engagement_metrics.
+        Porta a metodologia validada no TCC para dados reais em tempo real.
+        Índice único: (profile_id, calculated_date).
+        """
+        return self.db["audience_qualification"]
 
     # ─── Index Management ─────────────────────────────────────────────────────
 
@@ -231,11 +261,48 @@ class MongoRepository:
             name="engagement_metrics_profile_date_desc",
         )
 
+        # --- audience_qualification ---
+        # Único por perfil + data de cálculo (idempotência dos DAGs)
+        self.audience_qualification.create_index(
+            [("profile_id", ASCENDING), ("calculated_date", ASCENDING)],
+            unique=True,
+            name="audience_qualification_profile_date_unique",
+        )
+        # Índice para buscar a qualificação mais recente de um perfil
+        self.audience_qualification.create_index(
+            [("profile_id", ASCENDING), ("calculated_date", DESCENDING)],
+            name="audience_qualification_profile_date_desc",
+        )
+
         logger.info("Todos os índices criados/verificados com sucesso.")
 
 
-# ─── Singleton Global ──────────────────────────────────────────────────────────
-# Instanciado uma vez na importação do módulo.
-# Os services importam: from app.repositories.mongo_repository import mongo_repo
-mongo_repo = MongoRepository()
-mongo_repo.create_indexes()
+# ─── Lazy Singleton ───────────────────────────────────────────────────────────
+# A instância só é criada na primeira chamada a uma collection, não no import.
+# Isso evita que o Airflow falhe ao carregar os DAGs quando o MongoDB Atlas
+# estiver temporariamente indisponível (ex: cold start, variável de ambiente
+# não configurada no ambiente de testes).
+
+_mongo_repo_instance: "MongoRepository | None" = None
+
+
+def get_mongo_repo() -> MongoRepository:
+    """Retorna o singleton do MongoRepository, inicializando-o na primeira chamada."""
+    global _mongo_repo_instance
+    if _mongo_repo_instance is None:
+        _mongo_repo_instance = MongoRepository()
+        _mongo_repo_instance.create_indexes()
+    return _mongo_repo_instance
+
+
+class _LazyProxy:
+    """
+    Proxy transparente para MongoRepository.
+    Permite que os services façam `from app.repositories.mongo_repository import mongo_repo`
+    sem alterar nenhuma chamada existente, enquanto a conexão é feita de forma lazy.
+    """
+    def __getattr__(self, name: str):
+        return getattr(get_mongo_repo(), name)
+
+
+mongo_repo = _LazyProxy()

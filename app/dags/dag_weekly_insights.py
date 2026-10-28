@@ -2,23 +2,23 @@
 DAG: dag_weekly_insights
 
 Orquestra o pipeline semanal de métricas de conta e crescimento de perfil Instagram.
-Este DAG complementa o dag_instagram_etl, focando nas métricas que fazem sentido
+Este DAG complementa o dag_instagram_elt, focando nas métricas que fazem sentido
 na janela de 7 dias:
 
   - Coleta de profile insights da Graph API (accounts_engaged, views, reach,
     demographics), que a Meta só disponibiliza com agregação de período.
   - Cálculo de crescimento de seguidores (7d) que depende dos profile_snapshots
-    coletados diariamente pelo dag_instagram_etl.
+    coletados diariamente pelo dag_instagram_elt.
 
 Fluxo de execução (bitshift >>):
 
     [EXTRACT]
-    extract_profile_insights
+    extract_load_profile_insights
 
     [TRANSFORM — métricas de perfil]
         >> transform_growth
 
-Pré-requisito: dag_instagram_etl deve ter rodado pelo menos uma vez antes,
+Pré-requisito: dag_instagram_elt deve ter rodado pelo menos uma vez antes,
 para que profile_snapshots existam no banco.
 
 Configuração:
@@ -35,6 +35,7 @@ from airflow.operators.python import PythonOperator
 
 from app.services.insights_service import run_profile_insights_service
 from app.services.growth_service import run_growth_service
+from app.services.qualification_service import run_qualification_service
 
 logger = logging.getLogger(__name__)
 
@@ -91,8 +92,8 @@ def task_fn_growth(**context):
     Calcula crescimento semanal de seguidores (7d) e Loyalty Rate.
 
     Depende de:
-      - profile_snapshots coletados diariamente pelo dag_instagram_etl
-      - profile_insights coletado pela task anterior (extract_profile_insights)
+      - profile_snapshots coletados diariamente pelo dag_instagram_elt
+      - profile_insights coletado pela task anterior (extract_load_profile_insights)
     """
     profile_id = _get_profile_id()
     target_date = context["data_interval_end"].date()
@@ -102,32 +103,36 @@ def task_fn_growth(**context):
 
 def task_fn_qualification(**context):
     """
-    Placeholder — ativado quando qualification_service estiver implementado (task 2.5).
+    Calcula o IQA (Índice de Qualidade de Audiência) para os dados coletados
+    no período encerrado em data_interval_end.
+
+    Depende de:
+      - engagement_metrics calculados pelo dag_instagram_elt (diário)
+    Salva resultado em: audience_qualification
     """
-    logger.info(
-        "[qualification_service] Ainda não implementado. "
-        "Task reservada para quando qualification_service estiver pronto"
+    profile_id = _get_profile_id()
+    target_date = context["data_interval_end"].date()
+    result = run_qualification_service(
+        profile_id=profile_id,
+        lookback_days=30,
+        target_date=target_date,
     )
-    # from app.services.qualification_service import run_qualification_service
-    # profile_id = _get_profile_id()
-    # result = run_qualification_service(profile_id=profile_id)
-    # _log_result("qualification_service", result)
+    _log_result("qualification_service", result)
 
 
-# Definição do DAG
 with DAG(
     dag_id=DAG_ID,
     schedule_interval=SCHEDULE_INTERVAL,
     start_date=START_DATE,
     catchup=CATCHUP,
     default_args=DEFAULT_ARGS,
-    tags=["instagram", "etl", "insights", "weekly", "growth"],
+    tags=["instagram", "etl", "insights", "weekly", "growth", "qualification"],
     doc_md=__doc__,
 ) as dag:
 
     # ------ EXTRACT ------
     t_profile_insights = PythonOperator(
-        task_id="extract_profile_insights",
+        task_id="extract_load_profile_insights",
         python_callable=task_fn_profile_insights,
     )
 
@@ -137,5 +142,12 @@ with DAG(
         python_callable=task_fn_growth,
     )
 
+    t_qualification = PythonOperator(
+        task_id="transform_qualification",
+        python_callable=task_fn_qualification,
+    )
+
     # ------ DEPENDÊNCIAS ------
-    t_profile_insights >> t_growth
+    # qualification roda após growth (que preenche profile_snapshots.growth)
+    # mas pode rodar em paralelo com growth (ambos dependem apenas de extract_load_profile_insights)
+    t_profile_insights >> t_growth >> t_qualification

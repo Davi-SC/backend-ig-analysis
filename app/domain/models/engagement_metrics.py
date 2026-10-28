@@ -3,7 +3,7 @@ Model Pydantic para a collection 'engagement_metrics'.
 
 Esta collection NÃO vem da API do Instagram.
 É 100% calculada pelo engagement_service a partir dos dados já coletados
-(post_snapshots, account_snapshots). É o produto da fase TRANSFORM do ETL.
+(post_snapshots, account_snapshots). É o produto da fase TRANSFORM do ELT.
 
 É a collection que alimenta diretamente o pipeline de ML do TCC.
 

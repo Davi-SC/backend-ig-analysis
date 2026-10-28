@@ -1,7 +1,7 @@
 """
 Endpoints de dados brutos — /data
 
-Expõe os dados coletados e processados pelo ETL para consumo do frontend.
+Expõe os dados coletados e processados pelo ELT para consumo do frontend.
 Nenhuma lógica de negócio aqui — apenas leitura do MongoDB.
 
 Endpoints:

@@ -10,6 +10,24 @@ Métricas calculadas e salvas em profile_snapshots:
 - media_growth_7d           (posts publicados na semana)
 
 Destino: campo `growth` dentro do documento em `profile_snapshots` da data-alvo.
+
+⚠️ EXCEÇÃO AO PADRÃO ELT (débito técnico conhecido)
+    No pipeline ELT, os dados brutos (camada Extract+Load) e os dados derivados
+    (camada Transform) ficam em coleções separadas — ex.: post_snapshots (bruto)
+    -> engagement_metrics (derivado). Este service é a única exceção: grava o
+    resultado da transformação DENTRO de `profile_snapshots`, que é uma coleção
+    da camada bruta. Consequências:
+      - mistura dado coletado da API com dado calculado no mesmo documento;
+      - um re-snapshot do dia (upsert do snapshot_service) pode conviver com um
+        `growth` calculado sobre valores anteriores.
+
+    Melhoria futura sugerida:
+      1. Criar a coleção `growth_metrics` em mongo_repository (camada Transform),
+         com índice único (profile_id, date).
+      2. Trocar o update_one abaixo por um upsert em `growth_metrics`.
+      3. Ajustar as rotas/consultas que leem `profile_snapshots.growth`
+         (ex.: app/api/routes/analytics.py e data.py) para ler de `growth_metrics`.
+      4. Migrar os campos `growth` existentes e removê-los de `profile_snapshots`.
 """
 
 import logging
@@ -93,7 +111,7 @@ def run_growth_service(profile_id: str, target_date: date | None = None) -> dict
 
     logger.info(f"[growth_service] Iniciando processamento para profile_id={profile_id} em date={calc_date}")
 
-    # Puxa o snapshot alvo (coletado diariamente pelo dag_instagram_etl)
+    # Puxa o snapshot alvo (coletado diariamente pelo dag_instagram_elt)
     current_snap = mongo_repo.profile_snapshots.find_one({"profile_id": profile_id, "date": date_str})
     if not current_snap:
         return {
@@ -109,6 +127,8 @@ def run_growth_service(profile_id: str, target_date: date | None = None) -> dict
     growth_data["calculated_at"] = datetime.now(timezone.utc)
 
     # Aplica o update no próprio profile_snapshots
+    # EXCEÇÃO ELT: grava dado derivado em coleção bruta — ver docstring do módulo
+    # (melhoria futura: upsert em uma coleção própria `growth_metrics`).
     try:
         result = mongo_repo.profile_snapshots.update_one(
             {"_id": current_snap["_id"]},

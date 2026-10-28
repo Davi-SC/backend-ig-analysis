@@ -1,5 +1,5 @@
 """
-Pacote de serviços ETL — Instagram Analytics.
+Pacote de serviços ELT — Instagram Analytics.
 
 Services disponíveis (serão implementados nas próximas etapas):
 
