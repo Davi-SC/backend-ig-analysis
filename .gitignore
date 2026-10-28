@@ -13,9 +13,12 @@
 
 # Local configuration that shouldn't be shared
 *.local
-# data
-data/logs
-data/webhooks
+# Dados gerados em runtime (snapshots, logs, webhooks)
+app/data/
+data/
+
+# Notebooks de exploração/testes
+notebooks/
 
 ### Python ###
 # Python compiled files, virtual environments, and cache
